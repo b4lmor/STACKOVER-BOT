@@ -20,7 +20,9 @@ public class MessageFilter implements BotFilter {
 
     @Override
     public void doFilter(Update update) {
-        //update.
+        if (!update.message().text().startsWith("/")) {
+            controller.process(update);
+        }
     }
 
     @Override
@@ -30,7 +32,7 @@ public class MessageFilter implements BotFilter {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
 }

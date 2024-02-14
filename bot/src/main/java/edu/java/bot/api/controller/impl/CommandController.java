@@ -2,8 +2,10 @@ package edu.java.bot.api.controller.impl;
 
 import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.api.controller.Controller;
+import edu.java.bot.core.communication.dialog.TraceBotDialogs;
+import edu.java.bot.util.PrettifyUtils;
 import edu.java.bot.util.annotation.BotHandler;
-import edu.java.bot.core.telegram.BotService;
+import edu.java.bot.core.telegram.service.BotService;
 import edu.java.bot.util.ControllerUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,8 @@ public class CommandController implements Controller {
 
     @BotHandler("/track")
     public void handleTrack(Update update) {
-        botService.sendMessage("Track command", update);
+        botService.sendMessage("Send the link you want to subscribe to.", update);
+        botService.addDialog(update, TraceBotDialogs.newAddLinkDialog());
     }
 
     @BotHandler("/untrack")
@@ -52,7 +55,8 @@ public class CommandController implements Controller {
 
     @BotHandler("/list")
     public void handleList(Update update) {
-        botService.sendMessage("List command", update);
+        var links = botService.getAllLinks(update);
+        botService.sendMessage(PrettifyUtils.prettifyLinks(links), update);
     }
 
     public void handleOther(Update update) {
