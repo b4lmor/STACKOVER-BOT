@@ -21,7 +21,7 @@ public class MessageController implements Controller {
         if (botService.isUserInDialog(update)) {
             botService.consumeDialog(update);
         } else {
-            botService.sendMessage("How can I help you? Send a command.", update);
+            botService.sendMessage("How can I help you? Send a command or use /help.", update);
         }
     }
 }

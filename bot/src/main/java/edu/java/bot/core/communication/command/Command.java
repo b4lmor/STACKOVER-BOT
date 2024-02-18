@@ -2,11 +2,25 @@ package edu.java.bot.core.communication.command;
 
 import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.core.telegram.service.BotService;
+import lombok.Getter;
+import lombok.Setter;
 
-public interface Command {
+@Setter
+@Getter
+public abstract class Command {
 
-    void execute(BotService botService, Update update, String... args);
+    private Command nextIfFailed;
+    private Command nextIfSuccess;
 
-    void setNext(Command command);
+    protected abstract boolean start(BotService botService, Update update);
+
+    public boolean execute(BotService botService, Update update) {
+        boolean res = start(botService, update);
+        if (res) {
+            return nextIfSuccess == null || nextIfSuccess.execute(botService, update);
+        } else {
+            return nextIfFailed == null || nextIfFailed.execute(botService, update);
+        }
+    }
 
 }

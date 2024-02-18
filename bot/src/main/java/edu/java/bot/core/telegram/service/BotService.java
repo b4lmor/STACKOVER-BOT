@@ -1,16 +1,17 @@
 package edu.java.bot.core.telegram.service;
 
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.core.communication.dialog.Dialog;
 import edu.java.bot.core.repository.LinkRepository;
 import edu.java.bot.core.telegram.TraceBot;
-import edu.java.bot.core.communication.dialog.Dialog;
 import edu.java.bot.entity.Link;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class BotService {
@@ -33,6 +34,18 @@ public class BotService {
         bot.execute(new SendMessage(chatId, message));
     }
 
+    public void sendHtmlMessage(String message, Update update) {
+        long chatId = update.message().chat().id();
+        bot.execute(new SendMessage(chatId, message)
+            .parseMode(ParseMode.HTML));
+    }
+
+    public void sendMdMessage(String message, Update update) {
+        long chatId = update.message().chat().id();
+        bot.execute(new SendMessage(chatId, message)
+            .parseMode(ParseMode.Markdown));
+    }
+
     public void addDialog(Update update, Dialog dialog) {
         dialogs.put(update.message().from().id(), dialog);
     }
@@ -44,15 +57,23 @@ public class BotService {
     public void consumeDialog(Update update) {
         Long userId = update.message().from().id();
         Dialog dialog = dialogs.getOrDefault(userId, null);
-        dialog.pop().execute(this, update);
-        if (dialog.isEmpty()) {
-            dialogs.remove(userId);
+        var success = dialog.peek().execute(this, update);
+        if (success) {
+            dialog.pop();
+            if (dialog.isEmpty()) {
+                dialogs.remove(userId);
+            }
         }
     }
 
-    public void saveLink(Update update, String link) {
+    public void saveLink(Update update, Link link) {
         Long userId = update.message().from().id();
-        linkRepository.save(userId, new Link(link));
+        linkRepository.save(userId, link);
+    }
+
+    public void removeLink(Update update, String link) {
+        Long userId = update.message().from().id();
+        linkRepository.delete(userId, link);
     }
 
     public List<Link> getAllLinks(Update update) {

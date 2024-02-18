@@ -3,24 +3,21 @@ package edu.java.bot.core.communication.command.impl;
 import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.core.communication.command.Command;
 import edu.java.bot.core.telegram.service.BotService;
+import edu.java.bot.core.validation.Validator;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class CommandSendMessage extends Command {
-
-    private final String message;
-    private final boolean result;
-
-    public CommandSendMessage(String message, boolean result) {
-        this.message = message;
-        this.result = result;
-    }
+public class CommandRemoveLink extends Command {
 
     @Override
     protected boolean start(BotService botService, Update update) {
-        botService.sendMessage(message, update);
-        return result;
+        String linkName = update.message().text();
+        if (!Validator.isValidLinkName(linkName)) {
+            return false;
+        }
+        botService.removeLink(update, linkName);
+        return true;
     }
 }

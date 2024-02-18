@@ -1,13 +1,13 @@
 package edu.java.bot.util;
 
+import com.pengrad.telegrambot.model.Update;
+import edu.java.bot.api.controller.impl.CommandController;
+import edu.java.bot.util.annotation.BotHandler;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
-import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.api.controller.impl.CommandController;
-import edu.java.bot.util.annotation.BotHandler;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -19,10 +19,10 @@ public class ControllerUtils {
         ).toList();
     }
 
-    public Method findHandler(Update update, String defaultMethodName) {
+    public Method findHandler(String command, String defaultMethodName) {
         Predicate<Method> isHandler = method ->
             method.isAnnotationPresent(BotHandler.class)
-                && method.getAnnotation(BotHandler.class).value().equals(update.message().text());
+                && method.getAnnotation(BotHandler.class).value().equals(command);
         try {
             return ControllerUtils.findMethods(CommandController.class, List.of(isHandler)).getFirst();
         } catch (NoSuchElementException e) {

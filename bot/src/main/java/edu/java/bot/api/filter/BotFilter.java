@@ -6,8 +6,6 @@ public interface BotFilter {
 
     void doFilter(Update update);
 
-    FilterPriority getPriority();
-
     default boolean isEnabled() {
         return false;
     }
