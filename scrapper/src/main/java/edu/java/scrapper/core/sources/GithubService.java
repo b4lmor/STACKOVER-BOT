@@ -18,7 +18,7 @@ public class GithubService {
 
     public GithubService() {
         this.webClient = WebClient.builder().build();
-        this.baseUrl = "https://api.github.com" ;
+        this.baseUrl = "https://api.github.com";
     }
 
     public Mono<ResponseEntity<GithubCommitResponse[]>> getUpdates(String owner, String repo) {

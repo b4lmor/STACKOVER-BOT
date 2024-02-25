@@ -21,6 +21,7 @@ public class LinkUpdaterScheduler {
     }
 
     @Scheduled(fixedDelayString = "#{@interval}")
+    @SuppressWarnings("MagicNumber")
     public void update() {
 
         log.info("getting all tracked links ...");
