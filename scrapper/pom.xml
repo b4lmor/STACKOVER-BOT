@@ -84,15 +84,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.wiremock</groupId>
-            <artifactId>wiremock</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock-standalone</artifactId>
-            <version>3.0.1</version>
-            <type>pom</type>
+            <version>2.27.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>

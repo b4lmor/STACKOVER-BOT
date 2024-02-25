@@ -5,6 +5,7 @@ import edu.java.scrapper.api.dto.stackoverflow.StackOverflowAnswersResponse;
 import edu.java.scrapper.api.dto.stackoverflow.StackOverflowUserResponse;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,18 +13,22 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Service
+@AllArgsConstructor
 public class StackOverflowService {
 
     private final WebClient webClient;
 
+    private String baseUrl;
+
     public StackOverflowService() {
         this.webClient = WebClient.builder().build();
+        this.baseUrl = "https://api.stackexchange.com/2.3";
     }
 
     public Mono<ResponseEntity<List<AnswerDto>>> getUpdates(long questionId) {
         return webClient.method(HttpMethod.GET)
             .uri(String.format(
-                "https://api.stackexchange.com/2.3/questions/%d/answers?order=desc&sort=activity&site=stackoverflow&filter=withbody",
+                baseUrl + "/questions/%d/answers?site=stackoverflow&filter=withbody",
                 questionId
             ))
             .retrieve()
@@ -42,7 +47,7 @@ public class StackOverflowService {
     public Mono<ResponseEntity<String>> getUserName(long userId) {
         return webClient.method(HttpMethod.GET)
             .uri(String.format(
-                "https://api.stackexchange.com/2.3/users/%d?order=desc&sort=reputation&site=stackoverflow",
+                baseUrl + "/users/%d?site=stackoverflow",
                 userId
             ))
             .retrieve()

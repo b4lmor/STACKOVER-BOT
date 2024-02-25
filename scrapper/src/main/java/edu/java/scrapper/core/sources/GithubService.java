@@ -14,14 +14,17 @@ public class GithubService {
 
     private final WebClient webClient;
 
+    private String baseUrl;
+
     public GithubService() {
         this.webClient = WebClient.builder().build();
+        this.baseUrl = "https://api.github.com" ;
     }
 
     public Mono<ResponseEntity<GithubCommitResponse[]>> getUpdates(String owner, String repo) {
         return webClient.method(HttpMethod.GET)
             .uri(String.format(
-                "https://api.github.com/repos/%s/%s/commits",
+                baseUrl + "/repos/%s/%s/commits",
                 owner,
                 repo
             ))
