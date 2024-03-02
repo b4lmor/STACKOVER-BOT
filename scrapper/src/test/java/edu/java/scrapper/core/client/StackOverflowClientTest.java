@@ -1,4 +1,4 @@
-package edu.java.scrapper.core.sources;
+package edu.java.scrapper.core.client;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -15,11 +15,11 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class StackOverflowServiceTest {
+public class StackOverflowClientTest {
 
     private WireMockServer wireMockServer;
 
-    private StackOverflowService stackOverflowService;
+    private StackOverflowClient stackOverflowClient;
 
     @BeforeEach
     public void setup() {
@@ -30,7 +30,7 @@ public class StackOverflowServiceTest {
             .baseUrl("http://localhost:" + wireMockServer.port())
             .build();
 
-        stackOverflowService = new StackOverflowService(webClient, "http://localhost:" + wireMockServer.port());
+        stackOverflowClient = new StackOverflowClient(webClient, "http://localhost:" + wireMockServer.port());
     }
 
     @AfterEach
@@ -52,7 +52,7 @@ public class StackOverflowServiceTest {
                 )
         );
 
-        var responseEntity = stackOverflowService.getUpdates(questionId).block();
+        var responseEntity = stackOverflowClient.getUpdates(questionId).block();
 
         assertThat(responseEntity.getStatusCode())
             .isEqualTo(HttpStatus.OK);
@@ -87,7 +87,7 @@ public class StackOverflowServiceTest {
                 )
         );
 
-        var responseEntity = stackOverflowService.getUserName(userId).block();
+        var responseEntity = stackOverflowClient.getUserName(userId).block();
 
         assertThat(responseEntity.getStatusCode())
             .isEqualTo(HttpStatus.OK);

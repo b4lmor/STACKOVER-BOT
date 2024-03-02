@@ -1,4 +1,4 @@
-package edu.java.scrapper.core.sources;
+package edu.java.scrapper.core.client;
 
 import edu.java.scrapper.api.dto.stackoverflow.AnswerDto;
 import edu.java.scrapper.api.dto.stackoverflow.StackOverflowAnswersResponse;
@@ -14,13 +14,13 @@ import reactor.core.publisher.Mono;
 
 @Service
 @AllArgsConstructor
-public class StackOverflowService {
+public class StackOverflowClient {
 
     private final WebClient webClient;
 
     private String baseUrl;
 
-    public StackOverflowService() {
+    public StackOverflowClient() {
         this.webClient = WebClient.builder().build();
         this.baseUrl = "https://api.stackexchange.com/2.3";
     }

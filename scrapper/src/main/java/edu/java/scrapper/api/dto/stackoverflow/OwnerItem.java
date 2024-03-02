@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class Owner {
+public class OwnerItem {
+
     @JsonProperty("user_id")
     long userId;
 

@@ -1,4 +1,4 @@
-package edu.java.scrapper.core.sources;
+package edu.java.scrapper.core.client;
 
 import edu.java.scrapper.api.dto.github.GithubCommitResponse;
 import lombok.AllArgsConstructor;
@@ -10,13 +10,13 @@ import reactor.core.publisher.Mono;
 
 @Service
 @AllArgsConstructor
-public class GithubService {
+public class GithubClient {
 
     private final WebClient webClient;
 
     private String baseUrl;
 
-    public GithubService() {
+    public GithubClient() {
         this.webClient = WebClient.builder().build();
         this.baseUrl = "https://api.github.com";
     }

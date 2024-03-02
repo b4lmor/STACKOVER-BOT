@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class AnswerItem {
 
-    Owner owner;
+    OwnerItem owner;
 
     String body;
 

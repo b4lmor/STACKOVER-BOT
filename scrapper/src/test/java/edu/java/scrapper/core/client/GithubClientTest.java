@@ -1,4 +1,4 @@
-package edu.java.scrapper.core.sources;
+package edu.java.scrapper.core.client;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -15,11 +15,11 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class GithubServiceTest {
+public class GithubClientTest {
 
     private WireMockServer wireMockServer;
 
-    private GithubService githubService;
+    private GithubClient githubClient;
 
     @BeforeEach
     public void setup() {
@@ -30,7 +30,7 @@ public class GithubServiceTest {
             .baseUrl("http://localhost:" + wireMockServer.port())
             .build();
 
-        githubService = new GithubService(webClient, "http://localhost:" + wireMockServer.port());
+        githubClient = new GithubClient(webClient, "http://localhost:" + wireMockServer.port());
     }
 
     @AfterEach
@@ -53,7 +53,7 @@ public class GithubServiceTest {
                 )
         );
 
-        var responseEntity = githubService.getUpdates(owner, repo).block();
+        var responseEntity = githubClient.getUpdates(owner, repo).block();
 
         assertThat(responseEntity.getStatusCode())
             .isEqualTo(HttpStatus.OK);
