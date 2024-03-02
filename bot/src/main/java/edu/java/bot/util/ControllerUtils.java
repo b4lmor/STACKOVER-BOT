@@ -1,7 +1,7 @@
 package edu.java.bot.util;
 
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.api.controller.impl.CommandController;
+import edu.java.bot.api.controller.impl.CommandBotProcessor;
 import edu.java.bot.util.annotation.BotHandler;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -24,10 +24,10 @@ public class ControllerUtils {
             method.isAnnotationPresent(BotHandler.class)
                 && method.getAnnotation(BotHandler.class).value().equals(command);
         try {
-            return ControllerUtils.findMethods(CommandController.class, List.of(isHandler)).getFirst();
+            return ControllerUtils.findMethods(CommandBotProcessor.class, List.of(isHandler)).getFirst();
         } catch (NoSuchElementException e) {
             try {
-                return CommandController.class.getDeclaredMethod(defaultMethodName, Update.class);
+                return CommandBotProcessor.class.getDeclaredMethod(defaultMethodName, Update.class);
             } catch (NoSuchMethodException ex) {
                 throw new RuntimeException(ex);
             }

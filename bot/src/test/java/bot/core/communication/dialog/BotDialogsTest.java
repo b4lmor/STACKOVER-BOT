@@ -5,19 +5,21 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import edu.java.bot.core.communication.command.Command;
 import edu.java.bot.core.communication.dialog.Dialog;
-import edu.java.bot.core.communication.dialog.TraceBotDialogs;
+import edu.java.bot.core.communication.dialog.BotDialogs;
 import edu.java.bot.core.repository.LinkRepository;
-import edu.java.bot.core.telegram.TraceBot;
+import edu.java.bot.core.telegram.Bot;
 import edu.java.bot.core.telegram.service.BotService;
 import edu.java.bot.entity.Link;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TraceBotDialogsTest {
+public class BotDialogsTest {
 
-    TraceBot bot = mock(TraceBot.class);
+    Bot bot = mock(Bot.class);
     Update update = mock(Update.class);
     Message message = mock(Message.class);
     User user = mock(User.class);
@@ -43,7 +45,7 @@ public class TraceBotDialogsTest {
 
         linkRepository.save(1L, link);
 
-        Dialog dialog = TraceBotDialogs.newRemoveLinkDialog();
+        Dialog dialog = BotDialogs.newRemoveLinkDialog();
 
         Command command = dialog.pop();
 
@@ -64,7 +66,7 @@ public class TraceBotDialogsTest {
             "name1"
         );
 
-        Dialog dialog = TraceBotDialogs.newAddLinkDialog();
+        Dialog dialog = BotDialogs.newAddLinkDialog();
 
         Command command = dialog.pop();
 
@@ -82,7 +84,7 @@ public class TraceBotDialogsTest {
         } catch (RuntimeException ignored) {
         }
 
-        assertTrue(linkRepository.getAll(1L).getFirst().equals(link));
+        assertEquals(linkRepository.getAll(1L).getFirst(), link);
     }
 
 }

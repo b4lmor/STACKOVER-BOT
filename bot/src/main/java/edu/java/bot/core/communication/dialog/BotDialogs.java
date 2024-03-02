@@ -12,7 +12,7 @@ import java.util.Queue;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class TraceBotDialogs {
+public class BotDialogs {
 
     public Dialog newAddLinkDialog() {
 
@@ -21,23 +21,30 @@ public class TraceBotDialogs {
 
         var commandSetLinkName = new CommandSetLinkName(link);
 
-        commandSetLinkName.setNextIfSuccess(new CommandSendMessage(
-            "Now send the link.", true
-        ));
-        commandSetLinkName.setNextIfFailed(new CommandSendMessage(
-            "Name isn't valid! :(", false
-        ));
+        commandSetLinkName.setNextIfSuccess(
+            new CommandSendMessage(
+                "Now send the link.",
+                true
+            )
+        );
+        commandSetLinkName.setNextIfFailed(
+            new CommandSendMessage(
+                "Name isn't valid! :(",
+                false
+            )
+        );
 
         events.add(commandSetLinkName);
-
 
         var commandSetLinkValueAndSave = new CommandSetLinkValue(link);
 
         var commandSetLinkValueSuccessMessage = new CommandSaveLink(link);
 
-        commandSetLinkValueSuccessMessage.setNextIfSuccess(new CommandSendMessage(
-            "Success!", true
-        ));
+        commandSetLinkValueSuccessMessage.setNextIfSuccess(
+            new CommandSendMessage(
+                "Success!", true
+            )
+        );
 
         commandSetLinkValueAndSave.setNextIfSuccess(
             commandSetLinkValueSuccessMessage
@@ -47,7 +54,6 @@ public class TraceBotDialogs {
         ));
 
         events.add(commandSetLinkValueAndSave);
-
 
         return new Dialog(events);
 
@@ -59,12 +65,16 @@ public class TraceBotDialogs {
 
         var command = new CommandRemoveLink();
 
-        command.setNextIfSuccess(new CommandSendMessage(
-            "Link successfully removed!", true
-        ));
-        command.setNextIfFailed(new CommandSendMessage(
-            "Link isn't supported! :(", false
-        ));
+        command.setNextIfSuccess(
+            new CommandSendMessage(
+                "Link successfully removed!", true
+            )
+        );
+        command.setNextIfFailed(
+            new CommandSendMessage(
+                "Link isn't supported! :(", false
+            )
+        );
 
         events.add(command);
 

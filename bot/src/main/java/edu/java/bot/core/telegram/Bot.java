@@ -7,20 +7,23 @@ import edu.java.bot.configuration.ApplicationConfig;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
 @Log4j2
-public class TraceBot extends TelegramBot {
+public class Bot extends TelegramBot {
 
     private final ApplicationContext ctx;
 
     @Autowired
-    public TraceBot(ApplicationContext ctx) {
+    public Bot(ApplicationContext ctx) {
         super(ctx.getBean(ApplicationConfig.class).telegramToken());
         this.ctx = ctx;
     }
 
+    @EventListener(ContextRefreshedEvent.class)
     public void run() {
         var botFilterChain = ctx.getBean(BotFilterChain.class);
         this.setUpdatesListener(updates -> {

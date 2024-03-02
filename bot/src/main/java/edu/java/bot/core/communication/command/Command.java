@@ -17,9 +17,13 @@ public abstract class Command {
     public boolean execute(BotService botService, Update update) {
         boolean res = start(botService, update);
         if (res) {
-            return nextIfSuccess == null || nextIfSuccess.execute(botService, update);
+            return nextIfSuccess == null
+                ? res
+                : nextIfSuccess.execute(botService, update);
         } else {
-            return nextIfFailed == null || nextIfFailed.execute(botService, update);
+            return nextIfFailed == null
+                ? res
+                : nextIfFailed.execute(botService, update);
         }
     }
 

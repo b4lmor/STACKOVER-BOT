@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import edu.java.bot.core.repository.LinkRepository;
-import edu.java.bot.core.telegram.TraceBot;
+import edu.java.bot.core.telegram.Bot;
 import edu.java.bot.core.telegram.service.BotService;
 import edu.java.bot.entity.Link;
 import java.util.List;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class BotServiceTest {
 
     LinkRepository linkRepository = new LinkRepository();
-    TraceBot bot = mock(TraceBot.class);
+    Bot bot = mock(Bot.class);
     Link link = mock(Link.class);
     Update update = mock(Update.class);
     Message message = mock(Message.class);

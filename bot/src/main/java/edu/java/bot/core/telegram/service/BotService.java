@@ -5,7 +5,7 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.core.communication.dialog.Dialog;
 import edu.java.bot.core.repository.LinkRepository;
-import edu.java.bot.core.telegram.TraceBot;
+import edu.java.bot.core.telegram.Bot;
 import edu.java.bot.entity.Link;
 import java.util.HashMap;
 import java.util.List;
@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class BotService {
 
-    private final TraceBot bot;
+    private final Bot bot;
 
     private final LinkRepository linkRepository;
 
     private final Map<Long, Dialog> dialogs;
 
     @Autowired
-    public BotService(TraceBot bot, LinkRepository linkRepository) {
+    public BotService(Bot bot, LinkRepository linkRepository) {
         this.bot = bot;
         this.linkRepository = linkRepository;
         this.dialogs = new HashMap<>();
@@ -56,9 +56,9 @@ public class BotService {
 
     public void consumeDialog(Update update) {
         Long userId = update.message().from().id();
-        Dialog dialog = dialogs.getOrDefault(userId, null);
-        var success = dialog.peek().execute(this, update);
-        if (success) {
+        Dialog dialog = dialogs.get(userId);
+        var commandResult = dialog.peek().execute(this, update);
+        if (commandResult) {
             dialog.pop();
             if (dialog.isEmpty()) {
                 dialogs.remove(userId);
