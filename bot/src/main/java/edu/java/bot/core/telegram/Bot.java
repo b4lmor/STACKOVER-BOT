@@ -2,6 +2,7 @@ package edu.java.bot.core.telegram;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.request.SetMyCommands;
 import edu.java.bot.api.filter.chain.BotFilterChain;
 import edu.java.bot.configuration.ApplicationConfig;
 import lombok.extern.log4j.Log4j2;
@@ -10,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import static edu.java.bot.api.Commands.getCommands;
 
 @Component
 @Log4j2
@@ -25,6 +27,7 @@ public class Bot extends TelegramBot {
 
     @EventListener(ContextRefreshedEvent.class)
     public void run() {
+        this.execute(new SetMyCommands(getCommands()));
         var botFilterChain = ctx.getBean(BotFilterChain.class);
         this.setUpdatesListener(updates -> {
             updates.forEach(botFilterChain::process);
@@ -40,5 +43,7 @@ public class Bot extends TelegramBot {
             }
         });
     }
+
+
 
 }
