@@ -2,7 +2,7 @@ package bot.api.controller.impl;
 
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.api.controller.impl.CommandBotProcessor;
+import edu.java.bot.api.telegram.processor.impl.CommandBotProcessor;
 import edu.java.bot.core.telegram.service.BotService;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +21,7 @@ public class CommandBotProcessorTest {
 
             when(update.message()).thenReturn(message);
             when(message.text()).thenReturn("/start");
-            doNothing().when(botService).sendMessage("Start command", update);
+            doNothing().when(botService).sendMessage("Start command", update, null);
 
             CommandBotProcessor controller = new CommandBotProcessor(botService);
             controller.process(update);
@@ -37,7 +37,7 @@ public class CommandBotProcessorTest {
 
             when(update.message()).thenReturn(message);
             when(message.text()).thenReturn("/help");
-            doNothing().when(botService).sendMessage("Help command", update);
+            doNothing().when(botService).sendMessage("Help command", update, null);
 
             CommandBotProcessor controller = new CommandBotProcessor(botService);
             controller.process(update);

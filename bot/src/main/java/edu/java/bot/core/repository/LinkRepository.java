@@ -15,25 +15,25 @@ public class LinkRepository {
         links = new HashMap<>();
     }
 
-    public List<Link> getAll(Long userId) {
-        return links.getOrDefault(userId, List.of());
+    public List<Link> getAll(Long chatId) {
+        return links.getOrDefault(chatId, List.of());
     }
 
-    public void save(Long userId, Link link) {
-        if (links.containsKey(userId)) {
-            links.get(userId).add(link);
+    public void save(Long chatId, Link link) {
+        if (links.containsKey(chatId)) {
+            links.get(chatId).add(link);
         } else {
             List<Link> newLinks = new ArrayList<>();
             newLinks.add(link);
-            links.put(userId, newLinks);
+            links.put(chatId, newLinks);
         }
     }
 
-    public void delete(Long userId, String linkName) {
-        if (links.containsKey(userId)) {
-            var userLinks = links.get(userId);
+    public void delete(Long chatId, String linkName) {
+        if (links.containsKey(chatId)) {
+            var userLinks = links.get(chatId);
             links.put(
-                userId,
+                chatId,
                 userLinks.stream()
                     .filter(link -> !link.getName().equals(linkName))
                     .toList()

@@ -14,6 +14,7 @@ public enum TrackingResource {
     STACKOVERFLOW("stackoverflow.com");
 
     private static final String HTTP_PATH = "http://";
+
     private static final String HTTPS_PATH = "https://";
 
     private final String baseUrl;
