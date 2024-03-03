@@ -3,7 +3,7 @@ package edu.java.bot.util;
 import edu.java.bot.entity.Link;
 import java.util.List;
 import lombok.experimental.UtilityClass;
-import static edu.java.bot.api.Commands.TRACK_COMMAND;
+import static edu.java.bot.api.telegram.Commands.TRACK_COMMAND;
 
 @UtilityClass
 public class PrettifyUtils {

@@ -7,77 +7,79 @@ import edu.java.bot.core.communication.dialog.Dialog;
 import edu.java.bot.core.repository.LinkRepository;
 import edu.java.bot.core.telegram.Bot;
 import edu.java.bot.entity.Link;
+import jakarta.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BotService {
 
     private final Bot bot;
 
     private final LinkRepository linkRepository;
 
-    private final Map<Long, Dialog> dialogs;
+    private final Map<Long, Dialog> dialogs = new HashMap<>();
 
-    @Autowired
-    public BotService(Bot bot, LinkRepository linkRepository) {
-        this.bot = bot;
-        this.linkRepository = linkRepository;
-        this.dialogs = new HashMap<>();
+    public boolean isChatOpened(Update update) {
+        return true; // TODO: ask scrapper
     }
 
-    public void sendMessage(String message, Update update) {
-        long chatId = update.message().chat().id();
-        bot.execute(new SendMessage(chatId, message));
-    }
-
-    public void sendHtmlMessage(String message, Update update) {
-        long chatId = update.message().chat().id();
-        bot.execute(new SendMessage(chatId, message)
-            .parseMode(ParseMode.HTML));
-    }
-
-    public void sendMdMessage(String message, Update update) {
-        long chatId = update.message().chat().id();
-        bot.execute(new SendMessage(chatId, message)
-            .parseMode(ParseMode.Markdown));
-    }
-
-    public void addDialog(Update update, Dialog dialog) {
-        dialogs.put(update.message().from().id(), dialog);
-    }
-
-    public boolean isUserInDialog(Update update) {
-        return dialogs.containsKey(update.message().from().id());
-    }
-
-    public void consumeDialog(Update update) {
-        Long userId = update.message().from().id();
-        Dialog dialog = dialogs.get(userId);
-        var commandResult = dialog.peek().execute(this, update);
-        if (commandResult) {
-            dialog.pop();
-            if (dialog.isEmpty()) {
-                dialogs.remove(userId);
-            }
-        }
+    public void openChat(Update update) {
+        // TODO: send to scrapper's db
     }
 
     public void saveLink(Update update, Link link) {
-        Long userId = update.message().from().id();
-        linkRepository.save(userId, link);
+        long chatId = update.message().chat().id();
+        linkRepository.save(chatId, link);
+    }
+
+    public void sendMessage(String message, Update update, @Nullable ParseMode parseMode) {
+        long chatId = update.message().chat().id();
+        bot.execute(
+            parseMode == null
+                ? new SendMessage(chatId, message)
+                : new SendMessage(chatId, message).parseMode(parseMode)
+        );
+    }
+
+    public void addDialog(Update update, Dialog dialog) {
+        long chatId = update.message().chat().id();
+        dialogs.put(chatId, dialog);
+    }
+
+    public boolean isUserInDialog(Update update) {
+        long chatId = update.message().chat().id();
+        return dialogs.containsKey(chatId);
+    }
+
+    public void consumeDialog(Update update) {
+
+        long chatId = update.message().chat().id();
+        Dialog dialog = dialogs.get(chatId);
+        boolean commandResult = dialog.peek().execute(this, update);
+
+        if (commandResult) {
+            dialog.pop();
+
+            if (dialog.isEmpty()) {
+                dialogs.remove(chatId);
+            }
+        }
+
     }
 
     public void removeLink(Update update, String link) {
-        Long userId = update.message().from().id();
+        long userId = update.message().from().id();
         linkRepository.delete(userId, link);
     }
 
     public List<Link> getAllLinks(Update update) {
-        Long userId = update.message().from().id();
+        long userId = update.message().from().id();
         return linkRepository.getAll(userId);
     }
 

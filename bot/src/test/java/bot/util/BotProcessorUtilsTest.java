@@ -1,8 +1,8 @@
 package bot.util;
 
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.api.controller.impl.CommandBotProcessor;
-import edu.java.bot.util.ControllerUtils;
+import edu.java.bot.api.telegram.processor.impl.CommandBotProcessor;
+import edu.java.bot.util.ProcessorUtils;
 import java.lang.reflect.Method;
 import java.util.stream.Stream;
 import lombok.SneakyThrows;
@@ -48,7 +48,7 @@ public class BotProcessorUtilsTest {
     public void findHandler(String command, Method expectedResult) {
         Assertions.assertEquals(
             expectedResult,
-            ControllerUtils.findHandler(command, "handleOther")
+            ProcessorUtils.findHandler(command, "handleOther")
         );
     }
 
