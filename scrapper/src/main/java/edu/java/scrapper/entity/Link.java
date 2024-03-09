@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class Link {
 
+    long id;
+
+    Chat chat;
+
     String value;
-
-    long chatId;
-
-    long resourceId;
 
 }

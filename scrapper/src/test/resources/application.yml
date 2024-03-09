@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc://noDB
+  liquibase:
+    enabled: false
+

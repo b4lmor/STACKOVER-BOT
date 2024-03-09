@@ -14,7 +14,7 @@ public class LazyLinkRepository implements LinkRepository {
 
     @Override
     public void save(Link link) {
-        db.put(link.getChatId(), link);
+        db.put(link.getChat().getChatTgId(), link);
     }
 
     @Override

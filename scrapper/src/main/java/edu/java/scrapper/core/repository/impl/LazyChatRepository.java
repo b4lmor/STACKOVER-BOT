@@ -12,7 +12,7 @@ public class LazyChatRepository implements ChatRepository {
 
     @Override
     public void save(Chat chat) {
-        db.put(chat.getId(), chat);
+        db.put(chat.getChatTgId(), chat);
     }
 
     @Override
