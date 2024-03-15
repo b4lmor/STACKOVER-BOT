@@ -1,4 +1,4 @@
-package edu.java.scrapper.api.resources.dto.stackoverflow;
+package edu.java.scrapper.api.services.dto.stackoverflow;
 
 import lombok.Data;
 

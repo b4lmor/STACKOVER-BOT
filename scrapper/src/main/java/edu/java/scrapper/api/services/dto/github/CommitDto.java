@@ -1,4 +1,4 @@
-package edu.java.scrapper.api.resources.dto.github;
+package edu.java.scrapper.api.services.dto.github;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

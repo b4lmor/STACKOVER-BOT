@@ -1,0 +1,11 @@
+ALTER TABLE chats
+    ADD COLUMN createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE chats
+    ADD COLUMN chat_id BIGSERIAL UNIQUE NOT NULL;
+
+ALTER TABLE chats RENAME COLUMN createdAt TO created_at;
+
+ALTER TABLE chats RENAME COLUMN createdBy TO created_by;
+
+ALTER TABLE chats RENAME COLUMN chat_id TO tg_chat_id;

@@ -1,6 +1,6 @@
-package edu.java.scrapper.api.resources.client;
+package edu.java.scrapper.api.services.client;
 
-import edu.java.scrapper.api.resources.dto.github.GithubCommitResponse;
+import edu.java.scrapper.api.services.dto.github.GithubCommitResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;

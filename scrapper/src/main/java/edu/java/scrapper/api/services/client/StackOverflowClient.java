@@ -1,8 +1,8 @@
-package edu.java.scrapper.api.resources.client;
+package edu.java.scrapper.api.services.client;
 
-import edu.java.scrapper.api.resources.dto.stackoverflow.AnswerDto;
-import edu.java.scrapper.api.resources.dto.stackoverflow.StackOverflowAnswersResponse;
-import edu.java.scrapper.api.resources.dto.stackoverflow.StackOverflowUserResponse;
+import edu.java.scrapper.api.services.dto.stackoverflow.AnswerDto;
+import edu.java.scrapper.api.services.dto.stackoverflow.StackOverflowAnswersResponse;
+import edu.java.scrapper.api.services.dto.stackoverflow.StackOverflowUserResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
 package edu.java.scrapper.core.scheduled;
 
-import edu.java.scrapper.api.resources.client.GithubClient;
-import edu.java.scrapper.api.resources.client.StackOverflowClient;
+import edu.java.scrapper.api.services.client.GithubClient;
+import edu.java.scrapper.api.services.client.StackOverflowClient;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

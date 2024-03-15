@@ -2,7 +2,7 @@ package edu.java.scrapper.core.client;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import edu.java.scrapper.api.resources.client.GithubClient;
+import edu.java.scrapper.api.services.client.GithubClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
