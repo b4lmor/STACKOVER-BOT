@@ -19,7 +19,7 @@ public class CommandSaveLink extends Command {
 
     @Override
     protected boolean start(BotService botService, Update update) {
-        botService.saveLink(update, link);
+        botService.trackLink(update, link);
         return true;
     }
 }

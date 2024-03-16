@@ -1,17 +1,17 @@
 package edu.java.scrapper.entity;
 
-import lombok.Data;
 import java.util.Date;
+import lombok.Data;
 
 @Data
 public class Chat {
 
     long id;
 
-    long chatId;
+    long tgChatId;
 
     Date createdAt;
 
-    String createdBy;
+    boolean isActive;
 
 }

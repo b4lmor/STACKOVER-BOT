@@ -1,8 +1,10 @@
 package edu.java.bot.api.scrapper.controller;
 
+import com.pengrad.telegrambot.model.request.ParseMode;
 import edu.java.bot.api.scrapper.dto.request.UpdateDto;
 import edu.java.bot.api.scrapper.dto.response.ErrorResponseDto;
 import edu.java.bot.core.telegram.service.BotService;
+import edu.java.bot.util.PrettifyUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,7 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,6 +29,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RequestMapping(BOT)
+@Log4j2
 @CrossOrigin(origins = "*")
 @Tag(
     name = "api.bot.controller.tag.name",
@@ -60,9 +65,17 @@ public class BotController {
                 )
             })
     })
-    public ResponseEntity<?> catchUpdates(@Valid @RequestBody UpdateDto updateDto) {
+    public ResponseEntity<?> catchUpdates(@Valid @RequestBody List<UpdateDto> updateDtos) {
 
-        // processing updates
+        log.info("[CONTROLLER] :: Number of updates: {}.", updateDtos.size());
+
+        updateDtos.forEach(
+            updateDto -> botService.sendMessage(
+                PrettifyUtils.prettifyUpdate(updateDto),
+                updateDto.getChatId(),
+                ParseMode.HTML
+            )
+        );
 
         return ResponseEntity.ok().build();
     }

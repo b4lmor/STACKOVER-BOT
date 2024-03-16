@@ -1,4 +1,4 @@
-package edu.java.scrapper.api.bot.dto.response;
+package edu.java.scrapper.api.bot.dto.request;
 
 import lombok.Builder;
 import lombok.Value;
@@ -7,8 +7,10 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Value
 @Jacksonized
-public class IsOpenChatDto {
+public class UntrackLinkDto {
 
-    boolean isOpen;
+    String shortName;
+
+    long chatId;
 
 }

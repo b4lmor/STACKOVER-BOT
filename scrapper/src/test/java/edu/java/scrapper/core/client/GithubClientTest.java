@@ -54,18 +54,16 @@ public class GithubClientTest {
                 )
         );
 
-        var responseEntity = githubClient.getUpdates(owner, repo).block();
+        var responseEntity = githubClient.getUpdates(owner, repo).toStream().toList();
 
-        assertThat(responseEntity.getStatusCode())
-            .isEqualTo(HttpStatus.OK);
 
-        assertThat(responseEntity.getBody().length)
+        assertThat(responseEntity.size())
             .isEqualTo(1);
 
-        assertThat(responseEntity.getBody()[0].getCommitItem().getMessage())
+        assertThat(responseEntity.getFirst().getCommitItem().getMessage())
             .isEqualTo("Test commit");
 
-        assertThat(responseEntity.getBody()[0].getCommitItem().getAuthorItem().getName())
+        assertThat(responseEntity.getFirst().getCommitItem().getAuthorItem().getName())
             .isEqualTo("Test author");
 
         wireMockServer.verify(

@@ -3,6 +3,10 @@ package edu.java.bot.core.telegram.service;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.api.scrapper.client.ScrapperClient;
+import edu.java.bot.api.scrapper.dto.request.LinkDto;
+import edu.java.bot.api.scrapper.dto.request.UntrackLinkDto;
+import edu.java.bot.api.scrapper.dto.response.LinkViewDto;
 import edu.java.bot.core.communication.dialog.Dialog;
 import edu.java.bot.core.repository.LinkRepository;
 import edu.java.bot.core.telegram.Bot;
@@ -21,25 +25,58 @@ public class BotService {
 
     private final Bot bot;
 
+    private final ScrapperClient scrapperClient;
+
     private final LinkRepository linkRepository;
 
     private final Map<Long, Dialog> dialogs = new HashMap<>();
 
     public boolean isChatOpened(Update update) {
-        return true; // TODO: ask scrapper
+        long chatId = update.message().chat().id();
+        return scrapperClient.checkChat(chatId);
     }
 
     public void openChat(Update update) {
-        // TODO: send to scrapper's db
+        long chatId = update.message().chat().id();
+        scrapperClient.openChat(chatId);
     }
 
-    public void saveLink(Update update, Link link) {
+    public void trackLink(Update update, Link link) {
         long chatId = update.message().chat().id();
-        linkRepository.save(chatId, link);
+        scrapperClient.trackLink(
+            LinkDto.builder()
+                .chatId(chatId)
+                .value(link.getValue())
+                .shortName(link.getName())
+                .build()
+        );
+    }
+
+    public void untrackLink(Update update, String linkName) {
+        long chatId = update.message().chat().id();
+        scrapperClient.untrackLink(
+            UntrackLinkDto.builder()
+                .chatId(chatId)
+                .shortName(linkName)
+                .build()
+        );
+    }
+
+    public List<LinkViewDto> getAllLinks(Update update) {
+        long chatId = update.message().chat().id();
+        return scrapperClient.getLinksForChat(chatId);
     }
 
     public void sendMessage(String message, Update update, @Nullable ParseMode parseMode) {
         long chatId = update.message().chat().id();
+        bot.execute(
+            parseMode == null
+                ? new SendMessage(chatId, message)
+                : new SendMessage(chatId, message).parseMode(parseMode)
+        );
+    }
+
+    public void sendMessage(String message, long chatId, @Nullable ParseMode parseMode) {
         bot.execute(
             parseMode == null
                 ? new SendMessage(chatId, message)
@@ -71,16 +108,6 @@ public class BotService {
             }
         }
 
-    }
-
-    public void removeLink(Update update, String link) {
-        long userId = update.message().from().id();
-        linkRepository.delete(userId, link);
-    }
-
-    public List<Link> getAllLinks(Update update) {
-        long userId = update.message().from().id();
-        return linkRepository.getAll(userId);
     }
 
 }

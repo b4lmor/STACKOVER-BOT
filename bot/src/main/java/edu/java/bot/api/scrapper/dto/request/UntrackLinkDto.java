@@ -7,20 +7,10 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Value
 @Jacksonized
-public class UpdateDto {
+public class UntrackLinkDto {
 
-    UpdateBody body;
+    String shortName;
 
     long chatId;
-
-    public record UpdateBody(
-
-        String link,
-
-        String name,
-
-        String info
-
-    ) {}
 
 }

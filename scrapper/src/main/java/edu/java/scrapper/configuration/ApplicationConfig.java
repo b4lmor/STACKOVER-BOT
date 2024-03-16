@@ -16,10 +16,16 @@ public record ApplicationConfig(
 ) {
 
     @Bean
-    public Duration interval() {
-        return scheduler.interval();
+    public Duration updateInterval() {
+        return scheduler.updateInterval;
     }
 
-    public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
+    @Bean
+    public Duration deleteInterval() {
+        return scheduler.updateInterval;
     }
+
+    public record Scheduler(@NotNull Duration updateInterval, @NotNull Duration deleteInterval) {
+    }
+
 }
