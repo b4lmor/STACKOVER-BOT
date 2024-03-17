@@ -1,8 +1,9 @@
-package edu.java.scrapper.core.dao;
+package edu.java.scrapper.core.dao.jdbc;
 
-import edu.java.scrapper.core.dao.mapper.ChatLinksMapper;
-import edu.java.scrapper.core.dao.mapper.ChatMapper;
-import edu.java.scrapper.core.dao.mapper.LinkMapper;
+import edu.java.scrapper.core.dao.ChatLinksDao;
+import edu.java.scrapper.core.dao.jdbc.mapper.ChatLinksMapper;
+import edu.java.scrapper.core.dao.jdbc.mapper.ChatMapper;
+import edu.java.scrapper.core.dao.jdbc.mapper.LinkMapper;
 import edu.java.scrapper.entity.Chat;
 import edu.java.scrapper.entity.ChatLinks;
 import edu.java.scrapper.entity.Link;
@@ -18,11 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @SuppressWarnings("MultipleStringLiterals")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class JdbcChatLinksDao {
+public class JdbcChatLinksDao implements ChatLinksDao {
 
     private final JdbcTemplate jdbcTemplate;
+
     private final ChatLinksMapper chatLinksMapper = new ChatLinksMapper();
+
     private final LinkMapper linkMapper = new LinkMapper();
+
     private final ChatMapper chatMapper = new ChatMapper();
 
     public List<ChatLinks> findAll() {
@@ -48,13 +52,13 @@ public class JdbcChatLinksDao {
             "SELECT chat_id AS id, tg_chat_id, created_at, is_active FROM chat_links "
                 + "JOIN chats c on c.id = chat_links.chat_id "
                 + "JOIN public.links l on l.id = chat_links.link_id "
-                + "WHERE l.value=?";
+                + "WHERE l.lvalue=?";
         return jdbcTemplate.query(sql, new Object[] {value}, chatMapper);
     }
 
     public List<Link> findAllLinksConnectedWithChat(long tgChatId) {
         String sql =
-            "SELECT link_id AS id, value, hashsum FROM chat_links "
+            "SELECT link_id AS id, lvalue, hashsum FROM chat_links "
                 + "JOIN chats c on c.id = chat_links.chat_id "
                 + "JOIN links l on l.id = chat_links.link_id "
                 + "WHERE c.tg_chat_id=?";
@@ -66,7 +70,7 @@ public class JdbcChatLinksDao {
             "SELECT short_name FROM chat_links "
                 + "JOIN chats c on c.id = chat_links.chat_id "
                 + "JOIN links l on l.id = chat_links.link_id "
-                + "WHERE c.tg_chat_id=? AND value=?";
+                + "WHERE c.tg_chat_id=? AND lvalue=?";
         return jdbcTemplate.queryForObject(sql, new Object[] {tgChatId, value}, String.class);
     }
 

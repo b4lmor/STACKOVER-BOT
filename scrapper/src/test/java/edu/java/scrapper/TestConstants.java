@@ -38,7 +38,7 @@ public class TestConstants {
     public Link link() {
         Link link = new Link();
 
-        link.setValue(TEST_LINK_VALUE);
+        link.setLvalue(TEST_LINK_VALUE);
         link.setHashsum(10000);
 
         return link;
@@ -47,7 +47,7 @@ public class TestConstants {
     public Link link1() {
         Link link1 = new Link();
 
-        link1.setValue("https://github.com/projects/123");
+        link1.setLvalue("https://github.com/projects/123");
         link1.setHashsum(123456);
 
         return link1;

@@ -13,13 +13,13 @@ ALTER TABLE chats RENAME COLUMN chat_id TO tg_chat_id;
 ALTER TABLE chats
     ADD COLUMN is_active BOOLEAN DEFAULT false;
 
-CREATE INDEX index_links_value ON links(value);
+CREATE INDEX index_links_value ON links(lvalue);
 
 CREATE INDEX index_chats_tg_chat_id ON chats(tg_chat_id);
 
 ALTER TABLE links
     ADD CONSTRAINT unique_value
-        UNIQUE (value);
+        UNIQUE (lvalue);
 
 ALTER TABLE chats
     ADD CONSTRAINT unique_tg_chat_id

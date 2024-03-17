@@ -43,7 +43,7 @@ public class BotService {
         scrapperClient.trackLink(
             LinkDto.builder()
                 .chatId(chatId)
-                .value(link.getValue())
+                .lvalue(link.getValue())
                 .shortName(link.getName())
                 .build()
         );

@@ -1,7 +1,7 @@
 package edu.java.scrapper.core.service.impl;
 
 import edu.java.scrapper.api.bot.dto.response.IsActiveChatDto;
-import edu.java.scrapper.core.dao.JdbcChatDao;
+import edu.java.scrapper.core.dao.jdbc.JdbcChatDao;
 import edu.java.scrapper.core.service.ChatService;
 import edu.java.scrapper.entity.Chat;
 import lombok.RequiredArgsConstructor;
