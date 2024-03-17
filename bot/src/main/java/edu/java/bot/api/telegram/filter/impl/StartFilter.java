@@ -22,18 +22,16 @@ public class StartFilter extends ABotFilter {
 
     @Override
     public void doFilter(Update update) {
-        if (START_COMMAND.equals(update.message().text())) {
-            commandBotProcessor.process(update);
-
-        } else if (!botService.isChatOpened(update)) {
-            setNextFilter(null);
+        boolean isStopped = false;
+        if (!START_COMMAND.equals(update.message().text()) && !botService.isChatOpened(update)) {
+            isStopped = true;
             botService.sendMessage(
                 "Your chat isn't active yet! Type " + START_COMMAND + " to begin.",
                 update,
                 ParseMode.Markdown
             );
         }
-        if (nextFilter != null) {
+        if (nextFilter != null && !isStopped) {
             nextFilter.doFilter(update);
         }
 

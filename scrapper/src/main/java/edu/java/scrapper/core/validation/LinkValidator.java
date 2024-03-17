@@ -8,9 +8,11 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class LinkValidator {
 
-    public static final String GITHUB_PATTERN = ".*github.com/(\\w+)/(\\w+)";
+    public static final String GITHUB_PATTERN
+        = "^.*github.com/(.*)/([^/]*)";
 
-    public static final String SOF_PATTERN = ".*stackoverflow.com/questions/(\\w+)/.*";
+    public static final String SOF_PATTERN
+        = "^.*stackoverflow.com/questions/(\\d+).*";
 
     public static final String LINK_PATTERN = GITHUB_PATTERN + '|' + SOF_PATTERN;
 

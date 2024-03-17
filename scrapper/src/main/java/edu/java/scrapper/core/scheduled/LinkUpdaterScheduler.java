@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -39,32 +40,34 @@ public class LinkUpdaterScheduler {
         log.trace("[SCHEDULED] :: Updating links ...");
 
         var links = linkService.getAllLinksSortedByUpdateDate(LINKS_TO_UPDATE);
-        List<Link> updatedLinks = new ArrayList<>();
+        List<Pair<Link, String>> updatedLinks = new ArrayList<>();
 
         links.forEach(link -> {
-            int newHashsum = updateStrategy.countHashsum(link.getValue());
-            if (newHashsum != link.getHashsum()) {
-                updatedLinks.add(link);
+            var rawUpdate = updateStrategy.countHashsum(link.getValue());
+            if (rawUpdate.newHashsum() != link.getHashsum()) {
+                updatedLinks.add(Pair.of(link, rawUpdate.message()));
             }
-            linkService.update(link, newHashsum);
+            linkService.update(link, rawUpdate.newHashsum());
         });
 
         log.trace("[SCHEDULED] :: Sending updates ...");
 
-        botClient.sendUpdates(updatedLinks.stream().map(this::getUpdates).flatMap(List::stream).toList());
+        botClient.sendUpdates(updatedLinks.stream().map(pair -> this.getUpdates(pair.getLeft(), pair.getRight()))
+            .flatMap(List::stream)
+            .toList());
 
         log.trace("[SCHEDULED] :: Sending updates ... Done!");
 
         log.trace("[SCHEDULED] :: Updating links ... Done!");
     }
 
-    private List<UpdateDto> getUpdates(Link link) {
+    private List<UpdateDto> getUpdates(Link link, String message) {
         var chats = linkService.findAllChatsConnectedWithLink(link.getValue());
         return chats.stream().map(chat -> {
                 UpdateDto.UpdateBody body = new UpdateDto.UpdateBody(
                     link.getValue(),
                     linkService.getShortName(chat.getTgChatId(), link.getValue()),
-                    "The link has been updated!" // TODO
+                    message
                 );
                 return UpdateDto.builder().body(body).chatId(chat.getTgChatId()).build();
             })

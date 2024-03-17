@@ -70,12 +70,15 @@ public class BotController {
         log.info("[CONTROLLER] :: Number of updates: {}.", updateDtos.size());
 
         updateDtos.forEach(
-            updateDto -> botService.sendMessage(
-                PrettifyUtils.prettifyUpdate(updateDto),
-                updateDto.getChatId(),
-                ParseMode.HTML
-            )
-        );
+            updateDto -> {
+                log.info("[CONTROLLER] :: Sending update to: {} ...", updateDto.getChatId());
+                botService.sendMessage(
+                    PrettifyUtils.prettifyUpdate(updateDto),
+                    updateDto.getChatId(),
+                    ParseMode.HTML
+                );
+                log.info("[CONTROLLER] :: Sending update to: {} ... Done!", updateDto.getChatId());
+            });
 
         return ResponseEntity.ok().build();
     }

@@ -9,17 +9,16 @@ import java.util.Objects;
 
 public class UpdateStrategy {
 
+
+
     private final GithubClient githubClient = new GithubClient();
 
     private final StackOverflowClient stackOverflowClient = new StackOverflowClient();
 
-    public boolean checkIfUpdated(int prevHashsum, String link) {
-        return prevHashsum != countHashsum(link);
-    }
-
-    public int countHashsum(String link) {
+    public RawUpdate countHashsum(String link) {
         TrackingResource trackingResource = TrackingResource.parseResource(link);
-        int hashsum = 0;
+        int hashsum;
+        String message;
         switch (trackingResource) {
             case GITHUB -> {
                 var parsedLink = GhParsedLink.ofLink(link);
@@ -30,6 +29,14 @@ public class UpdateStrategy {
                     .map(Objects::hashCode)
                     .reduce(Integer::sum)
                     .get();
+                String rawCommitMessage = githubClientUpdates.getFirst()
+                    .getCommitItem()
+                    .getMessage();
+                String commitMessage = rawCommitMessage
+                    .substring(0, Math.min(RawUpdate.MAX_MESSAGE_LENGTH, rawCommitMessage.length()))
+                    + RawUpdate.DOTS;
+                String authorName = githubClientUpdates.getFirst().getCommitItem().getAuthorItem().getName();
+                message = "New commit!\nAuthor: " + authorName + "\nMessage: " + commitMessage;
             }
             case STACKOVERFLOW -> {
                 var parsedLink = SofParsedLink.ofLink(link);
@@ -40,10 +47,21 @@ public class UpdateStrategy {
                     .map(Objects::hashCode)
                     .reduce(Integer::sum)
                     .get();
+
+                String authorName = stackOverflowClient.getUserName(
+                    stackOverFlowUpdates.getFirst().getOwner().getUserId()
+                );
+                String rawText = stackOverFlowUpdates.getFirst()
+                    .getBody();
+                String text = rawText.substring(
+                    RawUpdate.SOF_SKIP_MESSAGE_LENGTH,
+                    Math.min(RawUpdate.MAX_MESSAGE_LENGTH, rawText.length())
+                ) + RawUpdate.DOTS;
+                message = "New answer!\nAuthor: " + authorName + "\nText: " + text;
             }
             default -> throw new RuntimeException("Internal server error");
         }
-        return hashsum;
+        return new RawUpdate(hashsum, message);
     }
 
 }

@@ -60,7 +60,8 @@ public class ScrapperClient {
     public void openChat(long chatId) {
         webClient.method(HttpMethod.PUT)
             .uri(baseUrl + CHAT + chatId + "/")
-            .retrieve();
+            .exchange()
+            .block();
     }
 
     public boolean checkChat(long chatId) {

@@ -176,7 +176,9 @@ public class ScrapperController {
         @PathVariable
         Long id
     ) {
+        log.trace("[CONTROLLER] :: Opening chat {} ...", id);
         chatService.activate(id);
+        log.trace("[CONTROLLER] :: Opening chat {} ... Done!", id);
         return ResponseEntity.ok().build();
     }
 

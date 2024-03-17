@@ -8,7 +8,6 @@ import edu.java.bot.api.scrapper.dto.request.LinkDto;
 import edu.java.bot.api.scrapper.dto.request.UntrackLinkDto;
 import edu.java.bot.api.scrapper.dto.response.LinkViewDto;
 import edu.java.bot.core.communication.dialog.Dialog;
-import edu.java.bot.core.repository.LinkRepository;
 import edu.java.bot.core.telegram.Bot;
 import edu.java.bot.entity.Link;
 import jakarta.annotation.Nullable;
@@ -26,8 +25,6 @@ public class BotService {
     private final Bot bot;
 
     private final ScrapperClient scrapperClient;
-
-    private final LinkRepository linkRepository;
 
     private final Map<Long, Dialog> dialogs = new HashMap<>();
 
