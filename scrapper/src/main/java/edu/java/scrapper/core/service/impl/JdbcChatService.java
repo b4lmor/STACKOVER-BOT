@@ -21,7 +21,7 @@ public class JdbcChatService implements ChatService {
         }
 
         return IsActiveChatDto.builder()
-            .isOpen(jdbcChatDao.findByTgChatId(tgChatId).get().isActive())
+            .isOpen(jdbcChatDao.findByTgChatId(tgChatId).get().getIsActive())
             .build();
     }
 
