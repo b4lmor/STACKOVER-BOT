@@ -1,3 +1,5 @@
+BEGIN;
+
 CREATE TABLE chats
 (
     id        BIGSERIAL PRIMARY KEY,
@@ -7,7 +9,7 @@ CREATE TABLE chats
 CREATE TABLE links
 (
     id      BIGSERIAL PRIMARY KEY,
-    value   VARCHAR(400) NOT NULL,
+    lvalue   VARCHAR(400) NOT NULL,
     hashsum INT
 );
 
@@ -18,7 +20,6 @@ CREATE TABLE chat_links
     link_id BIGINT
 );
 
-
 ALTER TABLE chat_links
     ADD CONSTRAINT fk_chat_links_to_links
         FOREIGN KEY (link_id)
@@ -28,3 +29,5 @@ ALTER TABLE chat_links
     ADD CONSTRAINT fk_chat_links_to_chats
         FOREIGN KEY (chat_id)
             REFERENCES chats (id);
+
+COMMIT;
