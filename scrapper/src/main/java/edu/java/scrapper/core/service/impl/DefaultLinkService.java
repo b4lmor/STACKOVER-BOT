@@ -3,9 +3,9 @@ package edu.java.scrapper.core.service.impl;
 import edu.java.scrapper.api.bot.dto.request.LinkDto;
 import edu.java.scrapper.api.bot.dto.request.LinkViewDto;
 import edu.java.scrapper.api.bot.dto.request.UntrackLinkDto;
-import edu.java.scrapper.core.dao.jdbc.JdbcChatDao;
-import edu.java.scrapper.core.dao.jdbc.JdbcChatLinksDao;
-import edu.java.scrapper.core.dao.jdbc.JdbcLinkDao;
+import edu.java.scrapper.core.dao.ChatDao;
+import edu.java.scrapper.core.dao.ChatLinksDao;
+import edu.java.scrapper.core.dao.LinkDao;
 import edu.java.scrapper.core.service.ChatService;
 import edu.java.scrapper.core.service.LinkService;
 import edu.java.scrapper.entity.Chat;
@@ -13,25 +13,22 @@ import edu.java.scrapper.entity.ChatLinks;
 import edu.java.scrapper.entity.Link;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class JdbcLinkService implements LinkService {
+@RequiredArgsConstructor
+public class DefaultLinkService implements LinkService {
 
-    private final JdbcLinkDao jdbcLinkDao;
+    private final LinkDao jdbcLinkDao;
 
-    private final JdbcChatDao jdbcChatDao;
+    private final ChatDao jdbcChatDao;
 
-    private final JdbcChatLinksDao jdbcChatLinksDao;
+    private final ChatLinksDao jdbcChatLinksDao;
 
     private final ChatService chatService;
 
     @Override
     public void track(LinkDto linkDto) {
         Link link = jdbcLinkDao.findByValue(linkDto.getLvalue())
-            .orElseGet(() -> this.create(linkDto.getLvalue(), linkDto.getShortName()));
+            .orElseGet(() -> this.create(linkDto.getLvalue()));
         Chat chat = jdbcChatDao.findByTgChatId(linkDto.getChatId())
             .orElseGet(() -> chatService.create(linkDto.getChatId()));
 
@@ -85,10 +82,9 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public Link create(String value, String shortName) {
+    public Link create(String value) {
         Link link = new Link();
         link.setLvalue(value);
-        link.setHashsum(0);
         jdbcLinkDao.add(link);
         return jdbcLinkDao.findByValue(value).get();
     }

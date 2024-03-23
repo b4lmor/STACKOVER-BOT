@@ -26,9 +26,9 @@ public class PrettifyUtils {
 
             prettyListBuilder.append(linkNumber + 1)
                 .append(". ")
-                .append(convertToHyperlink(link.getValue(), link.getShortName()))
+                .append(convertToHyperlink(link.getLvalue(), link.getShortName()))
                 .append("\n• Resource: [")
-                .append(TrackingResource.parseResource(link.getValue()).getBaseUrl())
+                .append(TrackingResource.parseResource(link.getLvalue()).getBaseUrl())
                 .append("]\n\n");
         }
 

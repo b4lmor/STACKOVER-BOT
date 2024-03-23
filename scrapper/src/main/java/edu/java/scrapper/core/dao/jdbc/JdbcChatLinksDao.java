@@ -10,7 +10,6 @@ import edu.java.scrapper.entity.Link;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -18,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @SuppressWarnings("MultipleStringLiterals")
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class JdbcChatLinksDao implements ChatLinksDao {
 
     private final JdbcTemplate jdbcTemplate;
