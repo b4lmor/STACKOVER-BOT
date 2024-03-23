@@ -2,6 +2,7 @@ springdoc:
   use-management-port: true
 
 app:
+  database-access-type: jpa
   scheduler:
     update-interval: 30s
     delete-interval: 4h

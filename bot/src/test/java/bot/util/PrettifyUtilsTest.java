@@ -19,13 +19,13 @@ public class PrettifyUtilsTest {
             Arguments.of(
                 List.of(
                     LinkViewDto.builder()
-                        .value(
+                        .lvalue(
                             "https://stackoverflow.com/questions/66675088/qt-copying-file-error-while-trying-to-run-the-project-how-to-fix-a-mistake-and")
                         .shortName("name1")
                         .build(),
 
                     LinkViewDto.builder()
-                        .value("https://github.com/pengrad/java-telegram-bot-api")
+                        .lvalue("https://github.com/pengrad/java-telegram-bot-api")
                         .shortName("name2")
                         .build()
                 ),

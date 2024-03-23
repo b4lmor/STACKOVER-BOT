@@ -11,7 +11,10 @@ import org.springframework.validation.annotation.Validated;
 public record ApplicationConfig(
 
     @NotNull
-    Scheduler scheduler
+    Scheduler scheduler,
+
+    @NotNull
+    DataAccessConfiguration.DatabaseAccessType databaseAccessType
 
 ) {
 

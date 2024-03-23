@@ -23,7 +23,7 @@ public interface LinkService {
 
     String getShortName(long tgChatId, String value);
 
-    Link create(String value, String shortName);
+    Link create(String value);
 
     void deleteUntracked();
 

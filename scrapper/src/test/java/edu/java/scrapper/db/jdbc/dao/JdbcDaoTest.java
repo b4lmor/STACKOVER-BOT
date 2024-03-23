@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -21,22 +23,34 @@ public class JdbcDaoTest extends IntegrationTest {
     private LinkUpdaterScheduler linkUpdaterScheduler;
 
     @Autowired
-    private JdbcChatDao jdbcChatDao;
+    private JdbcChatDao chatDao;
 
     @Autowired
-    private JdbcChatLinksDao jdbcChatLinksDao;
+    private JdbcChatLinksDao chatLinksDao;
 
     @Autowired
-    private JdbcLinkDao jdbcLinkDao;
+    private JdbcLinkDao linkDao;
+
+    @DynamicPropertySource
+    static void properties(DynamicPropertyRegistry registry) {
+        registry.add("app.database-access-type", () -> "jdbc");
+    }
+
+    @Test
+    public void isJdbc() {
+        Assertions.assertInstanceOf(JdbcChatDao.class, chatDao);
+        Assertions.assertInstanceOf(JdbcLinkDao.class, linkDao);
+        Assertions.assertInstanceOf(JdbcChatLinksDao.class, chatLinksDao);
+    }
 
     @Test
     @Transactional
     @Rollback
     public void addChatTest() {
-        jdbcChatDao.add(TestConstants.chat());
-        jdbcChatDao.add(TestConstants.chat1());
+        chatDao.add(TestConstants.chat());
+        chatDao.add(TestConstants.chat1());
 
-        var chats = jdbcChatDao.findAll();
+        var chats = chatDao.findAll();
 
         Assertions.assertEquals(2, chats.size());
     }
@@ -45,14 +59,14 @@ public class JdbcDaoTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void deleteChatTest() {
-        jdbcChatDao.add(TestConstants.chat());
-        jdbcChatDao.add(TestConstants.chat1());
+        chatDao.add(TestConstants.chat());
+        chatDao.add(TestConstants.chat1());
 
-        var chatsBefore = jdbcChatDao.findAll();
+        var chatsBefore = chatDao.findAll();
 
-        jdbcChatDao.delete(chatsBefore.getFirst().getId());
+        chatDao.delete(chatsBefore.getFirst().getId());
 
-        var chatsAfter = jdbcChatDao.findAll();
+        var chatsAfter = chatDao.findAll();
 
         Assertions.assertEquals(1, chatsBefore.size() - chatsAfter.size());
     }
@@ -61,9 +75,9 @@ public class JdbcDaoTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void findChatByTgChatIdTestSuccess() {
-        jdbcChatDao.add(TestConstants.chat());
+        chatDao.add(TestConstants.chat());
 
-        var chat = jdbcChatDao.findByTgChatId(TestConstants.TEST_TG_CHAT_ID);
+        var chat = chatDao.findByTgChatId(TestConstants.TEST_TG_CHAT_ID);
 
         Assertions.assertEquals(TestConstants.chat().getTgChatId(), chat.get().getTgChatId());
     }
@@ -72,7 +86,7 @@ public class JdbcDaoTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void findChatByTgChatIdTestFail() {
-        var chat = jdbcChatDao.findByTgChatId(TestConstants.TEST_TG_CHAT_ID);
+        var chat = chatDao.findByTgChatId(TestConstants.TEST_TG_CHAT_ID);
 
         Assertions.assertTrue(chat.isEmpty());
     }
@@ -81,15 +95,15 @@ public class JdbcDaoTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void addChatLinksTest() {
-        jdbcChatDao.add(TestConstants.chat());
-        jdbcLinkDao.add(TestConstants.link());
+        chatDao.add(TestConstants.chat());
+        linkDao.add(TestConstants.link());
 
-        var chat = jdbcChatDao.findAll().getFirst();
-        var link = jdbcLinkDao.findAll().getFirst();
+        var chat = chatDao.findAll().getFirst();
+        var link = linkDao.findAll().getFirst();
 
-        jdbcChatLinksDao.add(TestConstants.chatLinks(chat.getId(), link.getId()));
+        chatLinksDao.add(TestConstants.chatLinks(chat.getId(), link.getId()));
 
-        var chatLinks = jdbcChatLinksDao.findAll().getFirst();
+        var chatLinks = chatLinksDao.findAll().getFirst();
 
         Assertions.assertEquals(1, chatLinks.getLinkId());
         Assertions.assertEquals(1, chatLinks.getChatId());
@@ -99,19 +113,19 @@ public class JdbcDaoTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void deleteChatLinksTest() {
-        jdbcChatDao.add(TestConstants.chat());
-        jdbcLinkDao.add(TestConstants.link());
+        chatDao.add(TestConstants.chat());
+        linkDao.add(TestConstants.link());
 
-        var chat = jdbcChatDao.findAll().getFirst();
-        var link = jdbcLinkDao.findAll().getFirst();
+        var chat = chatDao.findAll().getFirst();
+        var link = linkDao.findAll().getFirst();
 
-        jdbcChatLinksDao.add(TestConstants.chatLinks(chat.getId(), link.getId()));
+        chatLinksDao.add(TestConstants.chatLinks(chat.getId(), link.getId()));
 
-        var chatLinksBefore = jdbcChatLinksDao.findAll();
+        var chatLinksBefore = chatLinksDao.findAll();
 
-        jdbcChatLinksDao.delete(chatLinksBefore.getFirst().getId());
+        chatLinksDao.delete(chatLinksBefore.getFirst().getId());
 
-        var chatLinksAfter = jdbcChatLinksDao.findAll();
+        var chatLinksAfter = chatLinksDao.findAll();
 
         Assertions.assertEquals(1, chatLinksBefore.size() - chatLinksAfter.size());
     }
@@ -120,20 +134,20 @@ public class JdbcDaoTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void findAllChatsConnectedWithLinkTest() {
-        jdbcChatDao.add(TestConstants.chat());
-        jdbcChatDao.add(TestConstants.chat1());
-        jdbcLinkDao.add(TestConstants.link());
-        jdbcLinkDao.add(TestConstants.link1());
+        chatDao.add(TestConstants.chat());
+        chatDao.add(TestConstants.chat1());
+        linkDao.add(TestConstants.link());
+        linkDao.add(TestConstants.link1());
 
-        var chat = jdbcChatDao.findAll().get(0);
-        var chat1 = jdbcChatDao.findAll().get(1);
-        var link = jdbcLinkDao.findAll().get(0);
-        var link1 = jdbcLinkDao.findAll().get(1);
+        var chat = chatDao.findAll().get(0);
+        var chat1 = chatDao.findAll().get(1);
+        var link = linkDao.findAll().get(0);
+        var link1 = linkDao.findAll().get(1);
 
-        jdbcChatLinksDao.add(TestConstants.chatLinks(chat.getId(), link.getId()));
-        jdbcChatLinksDao.add(TestConstants.chatLinks(chat1.getId(), link1.getId()));
+        chatLinksDao.add(TestConstants.chatLinks(chat.getId(), link.getId()));
+        chatLinksDao.add(TestConstants.chatLinks(chat1.getId(), link1.getId()));
 
-        var chats = jdbcChatLinksDao.findAllChatsConnectedWithLink(TestConstants.TEST_LINK_VALUE);
+        var chats = chatLinksDao.findAllChatsConnectedWithLink(TestConstants.TEST_LINK_VALUE);
 
         Assertions.assertEquals(1, chats.size());
         Assertions.assertEquals(TestConstants.chat().getTgChatId(), chats.getFirst().getTgChatId());
@@ -143,20 +157,20 @@ public class JdbcDaoTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void findAllLinksConnectedWithChat() {
-        jdbcChatDao.add(TestConstants.chat());
-        jdbcChatDao.add(TestConstants.chat1());
-        jdbcLinkDao.add(TestConstants.link());
-        jdbcLinkDao.add(TestConstants.link1());
+        chatDao.add(TestConstants.chat());
+        chatDao.add(TestConstants.chat1());
+        linkDao.add(TestConstants.link());
+        linkDao.add(TestConstants.link1());
 
-        var chat = jdbcChatDao.findAll().get(0);
-        var chat1 = jdbcChatDao.findAll().get(1);
-        var link = jdbcLinkDao.findAll().get(0);
-        var link1 = jdbcLinkDao.findAll().get(1);
+        var chat = chatDao.findAll().get(0);
+        var chat1 = chatDao.findAll().get(1);
+        var link = linkDao.findAll().get(0);
+        var link1 = linkDao.findAll().get(1);
 
-        jdbcChatLinksDao.add(TestConstants.chatLinks(chat.getId(), link.getId()));
-        jdbcChatLinksDao.add(TestConstants.chatLinks(chat1.getId(), link1.getId()));
+        chatLinksDao.add(TestConstants.chatLinks(chat.getId(), link.getId()));
+        chatLinksDao.add(TestConstants.chatLinks(chat1.getId(), link1.getId()));
 
-        var links = jdbcChatLinksDao.findAllLinksConnectedWithChat(TestConstants.TEST_TG_CHAT_ID);
+        var links = chatLinksDao.findAllLinksConnectedWithChat(TestConstants.TEST_TG_CHAT_ID);
 
         Assertions.assertEquals(1, links.size());
         Assertions.assertEquals(TestConstants.link().getLvalue(), links.getFirst().getLvalue());
@@ -166,10 +180,10 @@ public class JdbcDaoTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void addLinkTest() {
-        jdbcLinkDao.add(TestConstants.link());
-        jdbcLinkDao.add(TestConstants.link1());
+        linkDao.add(TestConstants.link());
+        linkDao.add(TestConstants.link1());
 
-        var links = jdbcLinkDao.findAll();
+        var links = linkDao.findAll();
 
         Assertions.assertEquals(2, links.size());
     }
@@ -178,14 +192,14 @@ public class JdbcDaoTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void deleteLinkTest() {
-        jdbcLinkDao.add(TestConstants.link());
-        jdbcLinkDao.add(TestConstants.link1());
+        linkDao.add(TestConstants.link());
+        linkDao.add(TestConstants.link1());
 
-        var linksBefore = jdbcLinkDao.findAll();
+        var linksBefore = linkDao.findAll();
 
-        jdbcLinkDao.delete(linksBefore.getFirst().getId());
+        linkDao.delete(linksBefore.getFirst().getId());
 
-        var linksAfter = jdbcLinkDao.findAll();
+        var linksAfter = linkDao.findAll();
 
         Assertions.assertEquals(1, linksBefore.size() - linksAfter.size());
     }
@@ -194,9 +208,9 @@ public class JdbcDaoTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void findLinkByValueTestSuccess() {
-        jdbcLinkDao.add(TestConstants.link());
+        linkDao.add(TestConstants.link());
 
-        var link = jdbcLinkDao.findByValue(TestConstants.TEST_LINK_VALUE);
+        var link = linkDao.findByValue(TestConstants.TEST_LINK_VALUE);
 
         Assertions.assertEquals(TestConstants.link().getLvalue(), link.get().getLvalue());
     }
@@ -205,7 +219,7 @@ public class JdbcDaoTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void findLinkByValueTestFail() {
-        var link = jdbcLinkDao.findByValue(TestConstants.TEST_LINK_VALUE);
+        var link = linkDao.findByValue(TestConstants.TEST_LINK_VALUE);
 
         Assertions.assertTrue(link.isEmpty());
     }
