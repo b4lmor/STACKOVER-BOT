@@ -5,11 +5,11 @@ import lombok.Data;
 @Data
 public class ChatLinks {
 
-    long id;
+    Long id;
 
-    long chatId;
+    Long chatId;
 
-    long linkId;
+    Long linkId;
 
     String shortName;
 

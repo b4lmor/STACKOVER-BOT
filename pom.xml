@@ -49,6 +49,7 @@
         <module>bot</module>
         <module>scrapper</module>
         <module>database</module>
+        <module>jooq-codegen</module>
     </modules>
 
     <dependencyManagement>

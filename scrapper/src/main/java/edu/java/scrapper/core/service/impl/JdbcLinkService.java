@@ -3,9 +3,9 @@ package edu.java.scrapper.core.service.impl;
 import edu.java.scrapper.api.bot.dto.request.LinkDto;
 import edu.java.scrapper.api.bot.dto.request.LinkViewDto;
 import edu.java.scrapper.api.bot.dto.request.UntrackLinkDto;
-import edu.java.scrapper.core.dao.JdbcChatDao;
-import edu.java.scrapper.core.dao.JdbcChatLinksDao;
-import edu.java.scrapper.core.dao.JdbcLinkDao;
+import edu.java.scrapper.core.dao.jdbc.JdbcChatDao;
+import edu.java.scrapper.core.dao.jdbc.JdbcChatLinksDao;
+import edu.java.scrapper.core.dao.jdbc.JdbcLinkDao;
 import edu.java.scrapper.core.service.ChatService;
 import edu.java.scrapper.core.service.LinkService;
 import edu.java.scrapper.entity.Chat;
@@ -30,8 +30,8 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     public void track(LinkDto linkDto) {
-        Link link = jdbcLinkDao.findByValue(linkDto.getValue())
-            .orElseGet(() -> this.create(linkDto.getValue(), linkDto.getShortName()));
+        Link link = jdbcLinkDao.findByValue(linkDto.getLvalue())
+            .orElseGet(() -> this.create(linkDto.getLvalue(), linkDto.getShortName()));
         Chat chat = jdbcChatDao.findByTgChatId(linkDto.getChatId())
             .orElseGet(() -> chatService.create(linkDto.getChatId()));
 
@@ -87,7 +87,7 @@ public class JdbcLinkService implements LinkService {
     @Override
     public Link create(String value, String shortName) {
         Link link = new Link();
-        link.setValue(value);
+        link.setLvalue(value);
         link.setHashsum(0);
         jdbcLinkDao.add(link);
         return jdbcLinkDao.findByValue(value).get();

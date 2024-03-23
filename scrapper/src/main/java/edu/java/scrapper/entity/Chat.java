@@ -6,12 +6,12 @@ import lombok.Data;
 @Data
 public class Chat {
 
-    long id;
+    Long id;
 
-    long tgChatId;
+    Long tgChatId;
 
     Date createdAt;
 
-    boolean isActive;
+    Boolean isActive;
 
 }

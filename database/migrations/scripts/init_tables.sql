@@ -7,7 +7,7 @@ CREATE TABLE chats
 CREATE TABLE links
 (
     id      BIGSERIAL PRIMARY KEY,
-    value   VARCHAR(400) NOT NULL,
+    lvalue   VARCHAR(400) NOT NULL,
     hashsum INT
 );
 

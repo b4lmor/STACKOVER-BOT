@@ -1,4 +1,4 @@
-package edu.java.scrapper.core.dao.mapper;
+package edu.java.scrapper.core.dao.jdbc.mapper;
 
 import edu.java.scrapper.entity.Link;
 import java.sql.ResultSet;
@@ -12,7 +12,7 @@ public class LinkMapper implements RowMapper<Link> {
         var link = new Link();
 
         link.setId(rs.getLong("id"));
-        link.setValue(rs.getString("value"));
+        link.setLvalue(rs.getString("lvalue"));
         link.setHashsum(rs.getInt("hashsum"));
 
         return link;

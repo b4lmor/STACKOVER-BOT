@@ -12,7 +12,7 @@ import static edu.java.scrapper.core.validation.LinkValidator.LINK_PATTERN;
 public class LinkDto {
 
     @Pattern(regexp = LINK_PATTERN)
-    String value;
+    String lvalue;
 
     String shortName;
 

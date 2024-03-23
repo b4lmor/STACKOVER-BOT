@@ -9,7 +9,7 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class LinkDto {
 
-    String value;
+    String lvalue;
 
     String shortName;
 
