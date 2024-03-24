@@ -1,5 +1,6 @@
 package edu.java.scrapper.entity;
 
+import java.util.Date;
 import lombok.Data;
 
 @Data
@@ -7,8 +8,10 @@ public class Chat {
 
     long id;
 
-    long chatTgId;
+    long tgChatId;
 
-    String createdBy;
+    Date createdAt;
+
+    boolean isActive;
 
 }

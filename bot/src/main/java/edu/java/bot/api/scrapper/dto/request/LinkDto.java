@@ -11,6 +11,8 @@ public class LinkDto {
 
     String value;
 
+    String shortName;
+
     long chatId;
 
 }

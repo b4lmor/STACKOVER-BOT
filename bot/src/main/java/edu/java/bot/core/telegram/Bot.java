@@ -5,10 +5,11 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import edu.java.bot.api.telegram.filter.chain.BotFilterChain;
 import edu.java.bot.configuration.ApplicationConfig;
+import jakarta.annotation.PreDestroy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import static edu.java.bot.api.telegram.Commands.getCommands;
@@ -25,7 +26,7 @@ public class Bot extends TelegramBot {
         this.ctx = ctx;
     }
 
-    @EventListener(ContextRefreshedEvent.class)
+    @EventListener(ApplicationReadyEvent.class)
     public void run() {
         this.execute(new SetMyCommands(getCommands()));
         var botFilterChain = ctx.getBean(BotFilterChain.class);
@@ -34,16 +35,19 @@ public class Bot extends TelegramBot {
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         }, e -> {
             if (e.response() != null) {
-                log.error("[Bot exception] Code: {}; Message: {}.",
+                log.error("[Bot exception] :: Code: {}; Message: {}.",
                     e.response().errorCode(),
                     e.response().description()
                 );
             } else {
-                log.error("[Unexpected exception] Message: {}.", e.getMessage());
+                log.error("[Unexpected exception] :: Message: {}.", e.getMessage());
             }
         });
     }
 
-
+    @PreDestroy
+    public void stop() {
+        this.shutdown();
+    }
 
 }

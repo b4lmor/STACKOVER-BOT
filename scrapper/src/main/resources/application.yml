@@ -3,9 +3,8 @@ springdoc:
 
 app:
   scheduler:
-    enable: true
-    interval: 10s
-    force-check-delay: 10s
+    update-interval: 30s
+    delete-interval: 4h
 
 spring:
   application:
@@ -18,7 +17,7 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   liquibase:
-    change-log: liquibase/master.xml
+    enabled: false
 
 server:
   port: 8080
@@ -29,7 +28,7 @@ management:
       exposure:
         include: openapi, swagger-ui
   server:
-    port: 9090
+    port: 8081
 
 logging:
   config: classpath:log4j2-plain.xml

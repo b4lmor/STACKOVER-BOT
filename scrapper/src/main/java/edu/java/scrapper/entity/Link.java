@@ -7,8 +7,8 @@ public class Link {
 
     long id;
 
-    Chat chat;
-
     String value;
+
+    int hashsum;
 
 }

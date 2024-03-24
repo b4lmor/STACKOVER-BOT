@@ -38,7 +38,7 @@ public class CommandBotProcessor implements BotProcessor {
     @BotHandler(START_COMMAND)
     public void handleStart(Update update) {
         botService.openChat(update);
-        botService.sendMessage("Start command", update, null);
+        botService.sendMessage("Let's start!", update, null);
     }
 
     @BotHandler(HELP_COMMAND)

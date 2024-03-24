@@ -17,7 +17,7 @@ public class CommandRemoveLink extends Command {
         if (!Validator.isValidLinkName(linkName)) {
             return false;
         }
-        botService.removeLink(update, linkName);
+        botService.untrackLink(update, linkName);
         return true;
     }
 }

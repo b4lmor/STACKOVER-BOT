@@ -26,6 +26,8 @@ services:
       - --username=postgres
       - --password=postgres
       - update
+#      - rollback
+#      - --tag=start
     volumes:
       - ./migrations:/liquibase/changelog
     networks:

@@ -2,7 +2,7 @@ package edu.java.scrapper.core.client;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import edu.java.scrapper.api.resources.client.StackOverflowClient;
+import edu.java.scrapper.api.services.client.StackOverflowClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,18 +53,15 @@ public class StackOverflowClientTest {
                 )
         );
 
-        var responseEntity = stackOverflowClient.getUpdates(questionId).block();
+        var responseEntity = stackOverflowClient.getUpdates(questionId).block().getItems();
 
-        assertThat(responseEntity.getStatusCode())
-            .isEqualTo(HttpStatus.OK);
-
-        assertThat(responseEntity.getBody().size())
+        assertThat(responseEntity.size())
             .isEqualTo(1);
 
-        assertThat(responseEntity.getBody().getFirst().getUserId())
+        assertThat(responseEntity.getFirst().getOwner().getUserId())
             .isEqualTo(1234);
 
-        assertThat(responseEntity.getBody().getFirst().getBody())
+        assertThat(responseEntity.getFirst().getBody())
             .isEqualTo("test body");
 
         wireMockServer.verify(
@@ -88,12 +85,9 @@ public class StackOverflowClientTest {
                 )
         );
 
-        var responseEntity = stackOverflowClient.getUserName(userId).block();
+        var responseEntity = stackOverflowClient.getUserName(userId);
 
-        assertThat(responseEntity.getStatusCode())
-            .isEqualTo(HttpStatus.OK);
-
-        assertThat(responseEntity.getBody())
+        assertThat(responseEntity)
             .isEqualTo("test name");
 
         wireMockServer.verify(

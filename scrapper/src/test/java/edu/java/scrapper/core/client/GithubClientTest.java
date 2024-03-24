@@ -2,7 +2,7 @@ package edu.java.scrapper.core.client;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import edu.java.scrapper.api.resources.client.GithubClient;
+import edu.java.scrapper.api.services.client.GithubClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,18 +54,16 @@ public class GithubClientTest {
                 )
         );
 
-        var responseEntity = githubClient.getUpdates(owner, repo).block();
+        var responseEntity = githubClient.getUpdates(owner, repo).toStream().toList();
 
-        assertThat(responseEntity.getStatusCode())
-            .isEqualTo(HttpStatus.OK);
 
-        assertThat(responseEntity.getBody().length)
+        assertThat(responseEntity.size())
             .isEqualTo(1);
 
-        assertThat(responseEntity.getBody()[0].getCommitItem().getMessage())
+        assertThat(responseEntity.getFirst().getCommitItem().getMessage())
             .isEqualTo("Test commit");
 
-        assertThat(responseEntity.getBody()[0].getCommitItem().getAuthorItem().getName())
+        assertThat(responseEntity.getFirst().getCommitItem().getAuthorItem().getName())
             .isEqualTo("Test author");
 
         wireMockServer.verify(
