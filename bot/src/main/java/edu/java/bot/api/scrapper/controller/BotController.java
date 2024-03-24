@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import edu.java.bot.api.scrapper.dto.request.UpdateDto;
 import edu.java.bot.api.scrapper.dto.response.ErrorResponseDto;
 import edu.java.bot.core.telegram.service.BotService;
-import edu.java.bot.util.PrettifyUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -66,20 +65,7 @@ public class BotController {
             })
     })
     public ResponseEntity<?> catchUpdates(@Valid @RequestBody List<UpdateDto> updateDtos) {
-
-        log.info("[CONTROLLER] :: Number of updates: {}.", updateDtos.size());
-
-        updateDtos.forEach(
-            updateDto -> {
-                log.info("[CONTROLLER] :: Sending update to: {} ...", updateDto.getChatId());
-                botService.sendMessage(
-                    PrettifyUtils.prettifyUpdate(updateDto),
-                    updateDto.getChatId(),
-                    ParseMode.HTML
-                );
-                log.info("[CONTROLLER] :: Sending update to: {} ... Done!", updateDto.getChatId());
-            });
-
+        botService.sendUpdates(updateDtos, ParseMode.HTML);
         return ResponseEntity.ok().build();
     }
 

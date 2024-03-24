@@ -29,23 +29,23 @@ public class ScrapperClient {
     }
 
     public void trackLink(LinkDto linkDto) {
-        log.trace("[SCRAPPER CLIENT] :: Sending linkDto ...");
+        log.debug("[SCRAPPER CLIENT] :: Sending linkDto ...");
         webClient.method(HttpMethod.POST)
             .uri(baseUrl + LINK)
             .bodyValue(linkDto)
             .exchange()
             .block();
-        log.trace("[SCRAPPER CLIENT] :: Sending linkDto ... Done!");
+        log.debug("[SCRAPPER CLIENT] :: Sending linkDto ... Done!");
     }
 
     public void untrackLink(UntrackLinkDto untrackLinkDto) {
-        log.trace("[SCRAPPER CLIENT] :: Sending untrackLinkDto ...");
+        log.debug("[SCRAPPER CLIENT] :: Sending untrackLinkDto ...");
         webClient.method(HttpMethod.DELETE)
             .uri(baseUrl + LINK)
             .bodyValue(untrackLinkDto)
             .exchange()
             .block();
-        log.trace("[SCRAPPER CLIENT] :: Sending untrackLinkDto ... Done!");
+        log.debug("[SCRAPPER CLIENT] :: Sending untrackLinkDto ... Done!");
     }
 
     public List<LinkViewDto> getLinksForChat(long tgChatId) {

@@ -6,19 +6,23 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.api.scrapper.client.ScrapperClient;
 import edu.java.bot.api.scrapper.dto.request.LinkDto;
 import edu.java.bot.api.scrapper.dto.request.UntrackLinkDto;
+import edu.java.bot.api.scrapper.dto.request.UpdateDto;
 import edu.java.bot.api.scrapper.dto.response.LinkViewDto;
 import edu.java.bot.core.communication.dialog.Dialog;
 import edu.java.bot.core.telegram.Bot;
 import edu.java.bot.entity.Link;
+import edu.java.bot.util.PrettifyUtils;
 import jakarta.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BotService {
 
@@ -79,6 +83,25 @@ public class BotService {
                 ? new SendMessage(chatId, message)
                 : new SendMessage(chatId, message).parseMode(parseMode)
         );
+    }
+
+    public void sendUpdates(List<UpdateDto> updateDtos, @Nullable ParseMode parseMode) {
+        updateDtos.forEach(
+            updateDto -> {
+                try {
+                    sendMessage(
+                        PrettifyUtils.prettifyUpdate(updateDto),
+                        updateDto.getChatId(),
+                        parseMode
+                    );
+                } catch (Throwable throwable) {
+                    log.error(
+                        "[BOT SERVICE] :: Can't send a message to {}, reason: {}.",
+                        updateDto.getChatId(),
+                        throwable
+                    );
+                }
+            });
     }
 
     public void addDialog(Update update, Dialog dialog) {
