@@ -1,9 +1,9 @@
 package edu.java.scrapper.db.jdbc.dao;
 
 import edu.java.scrapper.TestConstants;
-import edu.java.scrapper.core.dao.JdbcChatDao;
-import edu.java.scrapper.core.dao.JdbcChatLinksDao;
-import edu.java.scrapper.core.dao.JdbcLinkDao;
+import edu.java.scrapper.core.dao.jdbc.JdbcChatDao;
+import edu.java.scrapper.core.dao.jdbc.JdbcChatLinksDao;
+import edu.java.scrapper.core.dao.jdbc.JdbcLinkDao;
 import edu.java.scrapper.core.scheduled.LinkUpdaterScheduler;
 import edu.java.scrapper.db.IntegrationTest;
 import org.junit.jupiter.api.Assertions;
@@ -159,7 +159,7 @@ public class JdbcDaoTest extends IntegrationTest {
         var links = jdbcChatLinksDao.findAllLinksConnectedWithChat(TestConstants.TEST_TG_CHAT_ID);
 
         Assertions.assertEquals(1, links.size());
-        Assertions.assertEquals(TestConstants.link().getValue(), links.getFirst().getValue());
+        Assertions.assertEquals(TestConstants.link().getLvalue(), links.getFirst().getLvalue());
     }
 
     @Test
@@ -198,7 +198,7 @@ public class JdbcDaoTest extends IntegrationTest {
 
         var link = jdbcLinkDao.findByValue(TestConstants.TEST_LINK_VALUE);
 
-        Assertions.assertEquals(TestConstants.link().getValue(), link.get().getValue());
+        Assertions.assertEquals(TestConstants.link().getLvalue(), link.get().getLvalue());
     }
 
     @Test

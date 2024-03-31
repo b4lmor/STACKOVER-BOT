@@ -1,6 +1,7 @@
-package edu.java.scrapper.core.dao;
+package edu.java.scrapper.core.dao.jdbc;
 
-import edu.java.scrapper.core.dao.mapper.ChatMapper;
+import edu.java.scrapper.core.dao.ChatDao;
+import edu.java.scrapper.core.dao.jdbc.mapper.ChatMapper;
 import edu.java.scrapper.entity.Chat;
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @SuppressWarnings("MultipleStringLiterals")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class JdbcChatDao {
+public class JdbcChatDao implements ChatDao {
 
     private final JdbcTemplate jdbcTemplate;
 

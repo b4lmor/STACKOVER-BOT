@@ -43,7 +43,7 @@ public class LinkUpdaterScheduler {
         List<Pair<Link, String>> updatedLinks = new ArrayList<>();
 
         links.forEach(link -> {
-            var rawUpdate = updateStrategy.countHashsum(link.getValue());
+            var rawUpdate = updateStrategy.countHashsum(link.getLvalue());
             if (rawUpdate.newHashsum() != link.getHashsum()) {
                 updatedLinks.add(Pair.of(link, rawUpdate.message()));
             }
@@ -62,11 +62,11 @@ public class LinkUpdaterScheduler {
     }
 
     private List<UpdateDto> getUpdates(Link link, String message) {
-        var chats = linkService.findAllChatsConnectedWithLink(link.getValue());
+        var chats = linkService.findAllChatsConnectedWithLink(link.getLvalue());
         return chats.stream().map(chat -> {
                 UpdateDto.UpdateBody body = new UpdateDto.UpdateBody(
-                    link.getValue(),
-                    linkService.getShortName(chat.getTgChatId(), link.getValue()),
+                    link.getLvalue(),
+                    linkService.getShortName(chat.getTgChatId(), link.getLvalue()),
                     message
                 );
                 return UpdateDto.builder().body(body).chatId(chat.getTgChatId()).build();

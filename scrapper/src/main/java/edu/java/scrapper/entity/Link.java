@@ -1,14 +1,17 @@
 package edu.java.scrapper.entity;
 
+import java.time.LocalDate;
 import lombok.Data;
 
 @Data
 public class Link {
 
-    long id;
+    Long id;
 
-    String value;
+    String lvalue;
 
-    int hashsum;
+    Integer hashsum;
+
+    LocalDate lastUpdateAt;
 
 }
