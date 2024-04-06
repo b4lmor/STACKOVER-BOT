@@ -9,8 +9,6 @@ import java.util.Objects;
 
 public class UpdateStrategy {
 
-
-
     private final GithubClient githubClient = new GithubClient();
 
     private final StackOverflowClient stackOverflowClient = new StackOverflowClient();
