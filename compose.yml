@@ -1,0 +1,88 @@
+services:
+  postgresql:
+    container_name: scrapper-db
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgresql:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  liquibase-migrations:
+    container_name: scrapper-db-migrations
+    image: liquibase/liquibase:4.25
+    depends_on:
+      - postgresql
+    command:
+      - --changelog-file=master.xml
+      - --search-path=/liquibase/changelog/
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql:5432/postgres
+      - --username=postgres
+      - --password=postgres
+      - update
+    volumes:
+      - ./migrations:/liquibase/changelog
+    networks:
+      - backend
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.2.1
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    volumes:
+      - ./zookeeper/log:/var/lib/zookeeper/log
+      - ./zookeeper/data:/var/lib/zookeeper/data
+
+  kafka:
+    image: confluentinc/cp-kafka:7.2.1
+    hostname: kafka
+    container_name: kafka
+    ports:
+      - "29091:29091"
+    environment:
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9091,PLAINTEXT_HOST://localhost:29091
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9091,PLAINTEXT_HOST://0.0.0.0:29091
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_BROKER_ID: 1
+      BOOTSTRAP_SERVERS: kafka:9091
+      ZOOKEEPER: zookeeper:2181
+    depends_on:
+      - zookeeper
+    volumes:
+      - ./kafka/data:/var/lib/kafka/data
+
+  init-kafka:
+    image: confluentinc/cp-kafka:7.2.1
+    depends_on:
+      - kafka
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+      kafka-topics --bootstrap-server kafka:9091 --list
+
+      echo -e 'Creating kafka topics'
+      kafka-topics --bootstrap-server kafka:9091 --create --if-not-exists --topic messages.scrapper --replication-factor 1 --partitions 1
+
+      echo -e 'Successfully created the following topics:'
+      kafka-topics --bootstrap-server kafka:9091 --list
+      "
+
+volumes:
+  postgresql: { }
+  kafka: { }
+  zookeeper: { }
+
+networks:
+  backend: { }

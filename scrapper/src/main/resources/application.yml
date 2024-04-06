@@ -3,6 +3,7 @@ springdoc:
 
 app:
   database-access-type: jpa
+  data-transfer-protocol: kafka
   scheduler:
     update-interval: 30s
     delete-interval: 4h

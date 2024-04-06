@@ -1,7 +1,7 @@
 package edu.java.scrapper.core.scheduled;
 
-import edu.java.scrapper.api.bot.client.BotClient;
 import edu.java.scrapper.api.bot.dto.response.UpdateDto;
+import edu.java.scrapper.api.bot.producer.Producer;
 import edu.java.scrapper.core.service.LinkService;
 import edu.java.scrapper.core.tracked.UpdateStrategy;
 import edu.java.scrapper.entity.Link;
@@ -23,7 +23,7 @@ public class LinkUpdaterScheduler {
 
     private final LinkService linkService;
 
-    private final BotClient botClient;
+    private final Producer producer;
 
     private final UpdateStrategy updateStrategy = new UpdateStrategy();
 
@@ -52,9 +52,12 @@ public class LinkUpdaterScheduler {
 
         log.trace("[SCHEDULED] :: Sending updates ...");
 
-        botClient.sendUpdates(updatedLinks.stream().map(pair -> this.getUpdates(pair.getLeft(), pair.getRight()))
+        var updates = updatedLinks.stream()
+            .map(pair -> this.getUpdates(pair.getLeft(), pair.getRight()))
             .flatMap(List::stream)
-            .toList());
+            .toList();
+
+        producer.sendUpdates(updates);
 
         log.trace("[SCHEDULED] :: Sending updates ... Done!");
 
@@ -63,7 +66,8 @@ public class LinkUpdaterScheduler {
 
     private List<UpdateDto> getUpdates(Link link, String message) {
         var chats = linkService.findAllChatsConnectedWithLink(link.getLvalue());
-        return chats.stream().map(chat -> {
+        return chats.stream()
+            .map(chat -> {
                 UpdateDto.UpdateBody body = new UpdateDto.UpdateBody(
                     link.getLvalue(),
                     linkService.getShortName(chat.getTgChatId(), link.getLvalue()),
