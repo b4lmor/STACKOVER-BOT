@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import edu.java.bot.api.scrapper.dto.request.UpdateDto;
 import edu.java.bot.api.scrapper.dto.response.ErrorResponseDto;
 import edu.java.bot.core.telegram.service.BotService;
-import edu.java.bot.util.PrettifyUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,7 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,21 +63,8 @@ public class BotController {
                 )
             })
     })
-    public ResponseEntity<?> catchUpdates(@Valid @RequestBody List<UpdateDto> updateDtos) {
-
-        log.info("[CONTROLLER] :: Number of updates: {}.", updateDtos.size());
-
-        updateDtos.forEach(
-            updateDto -> {
-                log.info("[CONTROLLER] :: Sending update to: {} ...", updateDto.getChatId());
-                botService.sendMessage(
-                    PrettifyUtils.prettifyUpdate(updateDto),
-                    updateDto.getChatId(),
-                    ParseMode.HTML
-                );
-                log.info("[CONTROLLER] :: Sending update to: {} ... Done!", updateDto.getChatId());
-            });
-
+    public ResponseEntity<?> catchUpdates(@Valid @RequestBody UpdateDto update) {
+        botService.sendUpdate(update, ParseMode.HTML);
         return ResponseEntity.ok().build();
     }
 

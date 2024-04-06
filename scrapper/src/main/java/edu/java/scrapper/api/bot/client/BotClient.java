@@ -1,7 +1,6 @@
 package edu.java.scrapper.api.bot.client;
 
 import edu.java.scrapper.api.bot.dto.response.UpdateDto;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -22,7 +21,7 @@ public class BotClient {
         this.baseUrl = "http://localhost:8090/" + BOT;
     }
 
-    public void sendUpdates(List<UpdateDto> updateDto) {
+    public void sendUpdate(UpdateDto updateDto) {
         webClient.method(HttpMethod.PUT)
             .uri(baseUrl + UPDATES)
             .bodyValue(updateDto)

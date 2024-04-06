@@ -14,7 +14,10 @@ public record ApplicationConfig(
     Scheduler scheduler,
 
     @NotNull
-    DataAccessConfiguration.DatabaseAccessType databaseAccessType
+    DataAccessConfiguration.DatabaseAccessType databaseAccessType,
+
+    @NotNull
+    DataTransferProtocol dataTransferProtocol
 
 ) {
 
@@ -29,6 +32,14 @@ public record ApplicationConfig(
     }
 
     public record Scheduler(@NotNull Duration updateInterval, @NotNull Duration deleteInterval) {
+    }
+
+    public enum DataTransferProtocol {
+
+        HTTP,
+
+        KAFKA
+
     }
 
 }
