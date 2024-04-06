@@ -52,12 +52,10 @@ public class LinkUpdaterScheduler {
 
         log.trace("[SCHEDULED] :: Sending updates ...");
 
-        var updates = updatedLinks.stream()
+        updatedLinks.stream()
             .map(pair -> this.getUpdates(pair.getLeft(), pair.getRight()))
             .flatMap(List::stream)
-            .toList();
-
-        producer.sendUpdates(updates);
+            .forEach(producer::sendUpdate);
 
         log.trace("[SCHEDULED] :: Sending updates ... Done!");
 
@@ -68,12 +66,12 @@ public class LinkUpdaterScheduler {
         var chats = linkService.findAllChatsConnectedWithLink(link.getLvalue());
         return chats.stream()
             .map(chat -> {
-                UpdateDto.UpdateBody body = new UpdateDto.UpdateBody(
-                    link.getLvalue(),
-                    linkService.getShortName(chat.getTgChatId(), link.getLvalue()),
-                    message
-                );
-                return UpdateDto.builder().body(body).chatId(chat.getTgChatId()).build();
+                var update = new UpdateDto();
+                update.setChatId(chat.getTgChatId());
+                update.setLink(link.getLvalue());
+                update.setName(linkService.getShortName(chat.getTgChatId(), link.getLvalue()));
+                update.setInfo(message);
+                return update;
             })
             .toList();
     }

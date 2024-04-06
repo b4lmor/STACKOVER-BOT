@@ -40,10 +40,10 @@ public class PrettifyUtils {
 
         prettyListBuilder
             .append("[")
-            .append(convertToHyperlink(updateDto.getBody().link(), updateDto.getBody().name()))
+            .append(convertToHyperlink(updateDto.getLink(), updateDto.getName()))
             .append("]")
             .append("\n• ")
-            .append(updateDto.getBody().info());
+            .append(updateDto.getInfo());
 
         return prettyListBuilder.toString();
     }

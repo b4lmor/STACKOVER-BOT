@@ -1,26 +1,21 @@
 package edu.java.bot.api.scrapper.dto.request;
 
-import lombok.Builder;
-import lombok.Value;
-import lombok.extern.jackson.Jacksonized;
+import java.io.Serializable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Builder
-@Value
-@Jacksonized
-public class UpdateDto {
+@Getter
+@Setter
+@NoArgsConstructor
+public class UpdateDto implements Serializable {
 
-    UpdateBody body;
+    private long chatId;
 
-    long chatId;
+    private String link;
 
-    public record UpdateBody(
+    private String name;
 
-        String link,
-
-        String name,
-
-        String info
-
-    ) {}
+    private String info;
 
 }

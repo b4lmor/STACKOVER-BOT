@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,8 +63,8 @@ public class BotController {
                 )
             })
     })
-    public ResponseEntity<?> catchUpdates(@Valid @RequestBody List<UpdateDto> updateDtos) {
-        botService.sendUpdates(updateDtos, ParseMode.HTML);
+    public ResponseEntity<?> catchUpdates(@Valid @RequestBody UpdateDto update) {
+        botService.sendUpdate(update, ParseMode.HTML);
         return ResponseEntity.ok().build();
     }
 
