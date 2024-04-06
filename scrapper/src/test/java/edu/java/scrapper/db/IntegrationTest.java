@@ -12,12 +12,14 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.DirectoryResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
+@TestPropertySource(properties = {"app.database-access-type=jdbc", "app.data-transfer-protocol=http"})
 public abstract class IntegrationTest {
 
     @Container
@@ -47,7 +49,7 @@ public abstract class IntegrationTest {
             .toAbsolutePath()
             .getParent()
             .getParent()
-            .resolve("database/migrations");
+            .resolve("migrations");
         ResourceAccessor resourceAccessor = new DirectoryResourceAccessor(changeLogPath);
         Liquibase liquibase = new Liquibase("master.xml", resourceAccessor, database);
         liquibase.update(new Contexts(), new LabelExpression());
