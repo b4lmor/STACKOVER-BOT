@@ -18,6 +18,11 @@ target/
 *.iml
 *.ipr
 
+### Volumes ###
+kafka
+migrations
+zookeeper
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
