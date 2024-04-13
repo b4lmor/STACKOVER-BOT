@@ -60,6 +60,18 @@
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
+        <!--Metrics-->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>1.12.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+
         <!-- Telegram -->
         <dependency>
             <groupId>com.github.pengrad</groupId>

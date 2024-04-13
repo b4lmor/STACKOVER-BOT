@@ -26,7 +26,7 @@ public class BotFilterChainTest {
         when(filter1.isEnabled()).thenReturn(true);
         when(filter2.isEnabled()).thenReturn(true);
 
-        botFilterChain = new BotFilterChain(filters);
+        botFilterChain = new BotFilterChain(filters, null);
     }
 
     @Test
