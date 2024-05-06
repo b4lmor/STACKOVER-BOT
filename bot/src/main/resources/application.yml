@@ -1,11 +1,52 @@
+springdoc:
+  use-management-port: true
+
 app:
-  telegram-token: unset
+  telegram-token: ${BOT_TOKEN}
+  rate-limit:
+    capacity: 3
+    refill-rate: 100
+    refill-time-seconds: 3600
+    cache-size: 10_000
+    expire-after-access: 2h
+  retry:
+    backoff-type: constant
+    min-backoff: 100
+    max-attempts: 10
+    http-statuses: service_unavailable
 
 spring:
   application:
     name: bot
   jackson:
     time-zone: UTC
+  devtools:
+    restart:
+      enabled: false
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+    properties:
+      spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+      spring.deserializer.value.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+    bootstrapServers: localhost:29092
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: openapi, swagger-ui, info, health, prometheus
+      base-path: /
+      path-mapping:
+        health: health
+        prometheus: metrics
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  server:
+    port: 8091
 
 server:
   port: 8090

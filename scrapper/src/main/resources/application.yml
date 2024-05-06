@@ -1,15 +1,51 @@
+springdoc:
+  use-management-port: true
+
 app:
+  database-access-type: jpa
+  data-transfer-protocol: kafka
   scheduler:
-    enable: true
-    interval: 10s
-    force-check-delay: 10s
+    update-interval: 30s
+    delete-interval: 4h
 
 spring:
   application:
     name: scrapper
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    enabled: false
+
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    bootstrapServers: localhost:29092
+
 server:
   port: 8080
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: openapi, swagger-ui, info, health, prometheus
+      base-path: /
+      path-mapping:
+        health: health
+        prometheus: metrics
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  server:
+    port: 8081
+
 logging:
   config: classpath:log4j2-plain.xml
+
+

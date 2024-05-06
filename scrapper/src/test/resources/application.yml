@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc://noDB
+  liquibase:
+    enabled: false
+
+app:
+  scheduler:
+    update-interval: 1h
+    delete-interval: 4h
+
